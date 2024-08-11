@@ -1,7 +1,6 @@
-<!-- FIXME title -->
-# APP NAME
+# my portscanner
 
-<!--![un license](https://img.shields.io/github/license/RyosukeDTomita/<your-repository>)-->
+<!--![un license](https://img.shields.io/github/license/RyosukeDTomita/my_portscanner)-->
 
 ## INDEX
 
@@ -15,14 +14,15 @@
 
 ## ABOUT
 
+nmapぽいものをpythonで作ってみる。
+
 ---
 
 ## LICENSE
 
 ---
 
-<!-- NOLICENSE or MIT? -->
-[FIXME](./LICENSE)
+[unlicense](./LICENSE)
 
 ---
 

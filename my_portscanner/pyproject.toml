@@ -1,0 +1,27 @@
+[project]
+name = "my-portscanner"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "RyosukeDTomita", email = "d310151c2@gmail.com" }
+]
+dependencies = [
+    "pytest>=8.3.2",
+    "argparse>=1.4.0",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/my_portscanner"]
