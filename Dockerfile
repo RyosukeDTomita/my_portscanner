@@ -29,43 +29,34 @@ PATH=$PATH":$(aqua root-dir)/bin"
 rye pin ${PYTHON_VERSION}
 rye sync
 rye build
-#VERSION=$(grep -m 1 '^version =' "pyproject.toml" | sed -E 's/version = "(.*)"/\1/')
-#/app/.venv/bin/pip install dist/my_portscanner-${VERSION}.tar.gz
-#/app/.venv/bin/pip install --target /app/dist dist/my_portscanner-0.1.0-py3-none-any.whl
 EOF
 
 
-FROM python:3.12.4-bullseye AS run
+FROM python:3.12.4-slim-bullseye AS run
+ARG VERSION="0.1.0"
 
-LABEL version="0.1.0" \
+LABEL version=${VERSION} \
       author="RyosukeDTomita" \
       docker_build="docker buildx bakey"
 
 WORKDIR /app
 
-#ARG USER_NAME="sigma"
-ARG USER_NAME="root"
-# RUN <<EOF
-# echo 'Creating ${USER_NAME} group.'
-# addgroup ${USER_NAME}
-# echo 'Creating ${USER_NAME} user.'
-# adduser --ingroup ${USER_NAME} --gecos "my_portscanner user" --shell /bin/bash --no-create-home --disabled-password ${USER_NAME}
-# EOF
-
-
-ENV PATH=${PATH}:/app/.venv/bin
-
-COPY --from=devcontainer --chown=${USER_NAME}:${USER_NAME} ["/app/dist", "/app/dist"]
-COPY --from=devcontainer --chown=${USER_NAME}:${USER_NAME} ["/app/.venv", "/app/.venv"]
-COPY --from=devcontainer --chown=${USER_NAME}:${USER_NAME} ["/root/.rye/py/cpython@3.12.4/bin/python3.12", "/root/.rye/py/cpython@3.12.4/bin/python3.12"]
- /root/.rye/py/cpython@3.12.4/bin/../lib/libpython3.12.so.1.0
-
+ARG USER_NAME="sigma"
+#ARG USER_NAME="root"
 RUN <<EOF
-chmod +x /app/.venv/bin/python3
-chmod +x /app/.venv/bin/my_portscanner
+echo 'Creating ${USER_NAME} group.'
+addgroup ${USER_NAME}
+echo 'Creating ${USER_NAME} user.'
+adduser --ingroup ${USER_NAME} --gecos "my_portscanner user" --shell /bin/bash --no-create-home --disabled-password ${USER_NAME}
 EOF
 
-#USER ${USER_NAME}
+COPY --from=devcontainer --chown=${USER_NAME}:${USER_NAME} ["/app/dist/my_portscanner-${VERSION}-py3-none-any.whl", "/app/dist/my_portscanner-${VERSION}-py3-none-any.whl"]
 
-# ENTRYPOINT ["/app/test.py"]
-CMD ["my_portscanner", "--help"]
+RUN <<EOF
+python3 -m pip install /app/dist/my_portscanner-${VERSION}-py3-none-any.whl
+EOF
+
+USER ${USER_NAME}
+
+ENTRYPOINT ["my_portscanner"]
+#CMD ["my_portscanner", "--help"]

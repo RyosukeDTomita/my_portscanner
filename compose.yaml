@@ -1,5 +1,5 @@
 services:
-  python-environment:
+  my_portscanner_app:
     build:
       context: .
       dockerfile: Dockerfile
