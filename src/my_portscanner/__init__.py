@@ -5,13 +5,14 @@ from .options import parse_args
 from .toml_parser import get_project_version
 from .get_datetime import get_datetime_now
 from .scan_tools import ConnectScan
+from .version import __version__
 
 
 def main():
     args = parse_args()
 
     print(
-        f"Starting my_portscanner {get_project_version()} ( https://github.com/RyosukeDTomita/my_portscanner ) at {get_datetime_now()}"
+        f"Starting my_portscanner {__version__} ( https://github.com/RyosukeDTomita/my_portscanner ) at {get_datetime_now()}"
     )
 
     # target_ipがipアドレスの形式でない場合はhost名を名前解決する。

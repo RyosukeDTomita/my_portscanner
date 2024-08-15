@@ -1,5 +1,6 @@
+import importlib.resources
 import tomli
-import os
+import importlib
 
 
 def get_project_version() -> str:
@@ -8,9 +9,8 @@ def get_project_version() -> str:
     Returns:
         _type_: _description_
     """
-    script_running_directory = os.path.dirname(os.path.abspath(__file__))
-    pyproject_toml_path = os.path.join(
-        script_running_directory + "/../../" + "pyproject.toml"
+    pyproject_toml_path = importlib.resources.files("my_portscanner").joinpath(
+        "pyproject.toml"
     )
 
     with open(pyproject_toml_path, "rb") as f:
