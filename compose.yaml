@@ -3,5 +3,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: python-img-build:latest
-    container_name: python-container-build
+    image: my_portscanner:latest
+    container_name: my_portscanner-container
