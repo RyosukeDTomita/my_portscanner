@@ -22,6 +22,7 @@ def parse_args() -> dict:
     if p.port is not None:
         port_list = [int(x) for x in p.port.split(",")]
     else:
+        # default port list
         port_list = [22, 80, 443, 8080]
 
     args = {
