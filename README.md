@@ -57,6 +57,11 @@ options:
 git clone https://github.com:RYosukeDTomita/my_portscanner.git
 docekr buildx build -t my_portscanner .
 ```
+> [!NOTE]
+> if you want to use docker compose, please try this.
+> ```shell
+> docker buildx bake
+> ```
 
 ---
 
@@ -66,3 +71,9 @@ docekr buildx build -t my_portscanner .
 # example
 docker run -it my_portscanner localhost -p 22
 ```
+
+> [!NOTE]
+> if you want to use docker compose, please try this.
+> ```shell
+> docker compose run my_portscanner_app localhost
+> ```

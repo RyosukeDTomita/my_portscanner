@@ -4,3 +4,4 @@ CODEOWNERS
 .github/
 Dockerfile
 docker-compose.yml
+pyproject_toml-0.0.10-py3-none-any.whl

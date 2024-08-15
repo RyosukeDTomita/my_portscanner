@@ -37,12 +37,16 @@ ARG VERSION="0.1.0"
 
 LABEL version=${VERSION} \
       author="RyosukeDTomita" \
-      docker_build="docker buildx bakey"
+      docker_compose_build="docker buildx bake" \
+      docker_build="docker buildx build . -t my_portscanner" \
+      docker_compose_run="docker compose run my_portscanner_app localhost"
+      docker_run="docker run my_portscanner localhost"
+
 
 WORKDIR /app
 
+# create execution user
 ARG USER_NAME="sigma"
-#ARG USER_NAME="root"
 RUN <<EOF
 echo 'Creating ${USER_NAME} group.'
 addgroup ${USER_NAME}
@@ -59,4 +63,3 @@ EOF
 USER ${USER_NAME}
 
 ENTRYPOINT ["my_portscanner"]
-#CMD ["my_portscanner", "--help"]
