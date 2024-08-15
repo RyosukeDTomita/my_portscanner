@@ -1,7 +1,6 @@
 # cofing:utf-8
-import pytest
 import sys
-
+import pytest
 from my_portscanner import options
 
 

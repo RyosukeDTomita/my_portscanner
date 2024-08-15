@@ -1,24 +1,35 @@
 # Dev Container
-FROM python:3.12.4-bullseye AS devcontainer
+#FROM python:3.12.4-bullseye AS devcontainer
+FROM debian:bookworm-20240812 AS devcontainer
+
+ARG PYTHON_VERSION=3.12.4
 
 WORKDIR /app
 COPY ../ .
 
 # aqua install
-RUN <<'EOF'
+RUN <<EOF
+apt-get update -y
+apt-get install -y --no-install-recommends wget ca-certificates
 wget -q https://github.com/aquaproj/aqua/releases/download/v2.30.0/aqua_linux_amd64.tar.gz
 rm -rf /usr/local/bin/aqua && tar -C /usr/local/bin/ -xzf aqua_linux_amd64.tar.gz
 rm aqua_linux_amd64.tar.gz
 EOF
 
 # install packages and some tools.
-# NOTE: rye is installed by aqua
+# NOTE: rye is installed by aqua.
 RUN <<EOF
-pip install --upgrade pip setuptools wheel --no-cache-dir
-pip install -r requirements.lock --no-cache-dir
 aqua install
-PATH=$PATH":$(aqua root-dir)/bin"
 EOF
+
+RUN <<EOF
+PATH=$PATH":$(aqua root-dir)/bin"
+rye pin ${PYTHON_VERSION}
+rye sync
+EOF
+
+#pip install --upgrade pip setuptools wheel --no-cache-dir
+# pip install -r requirements.lock --no-cache-dir
 
 
 

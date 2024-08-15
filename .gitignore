@@ -1,1 +1,10 @@
-go1.22.6.linux-arm64.tar.gz
+# python generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# venv
+.venv

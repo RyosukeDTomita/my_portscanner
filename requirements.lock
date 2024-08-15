@@ -20,3 +20,7 @@ pluggy==1.5.0
     # via pytest
 pytest==8.3.2
     # via my-portscanner
+pytz==2024.1
+    # via my-portscanner
+tomli==2.0.1
+    # via my-portscanner

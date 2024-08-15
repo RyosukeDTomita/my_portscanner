@@ -1,7 +1,7 @@
 services:
   python-environment:
     build:
-      context: ./my_portscanner
+      context: .
       dockerfile: Dockerfile
     image: python-img-build:latest
     container_name: python-container-build
