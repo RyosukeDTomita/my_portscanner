@@ -4,17 +4,15 @@ import re
 from .options import parse_args
 from .toml_parser import get_project_version
 from .get_datetime import get_datetime_now
-from .scan_tools import connect_scan
-from .result_formatter import format
+from .scan_tools import ConnectScan
 
 
 def main():
+    args = parse_args()
+
     print(
         f"Starting my_portscanner {get_project_version()} ( https://github.com/RyosukeDTomita/my_portscanner ) at {get_datetime_now()}"
     )
-
-    args = parse_args()
-    print(args)
 
     # target_ipがipアドレスの形式でない場合はhost名を名前解決する。
     match = re.match(
@@ -28,8 +26,9 @@ def main():
 
     if args["connect_scan"]:
         print("connect scan")
-        open_port_list = connect_scan.run(target_ip, args["port"])
-    format(open_port_list) # FIXME: もっといい書き方考える
+        connect_scan = ConnectScan(target_ip=target_ip, target_port_list=args["port"])
+        connect_scan.run()
+        connect_scan.print_result()
 
 
 __all__ = ["main"]
