@@ -1,5 +1,5 @@
 [project]
-name = "my-portscanner"
+name = "my_portscanner"
 version = "0.1.0"
 description = "Add your description here"
 authors = [
@@ -10,6 +10,7 @@ dependencies = [
     "argparse>=1.4.0",
     "tomli>=2.0.1",
     "pytz>=2024.1",
+    "freezegun>=1.5.1",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"

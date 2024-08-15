@@ -15,4 +15,4 @@ def test_parse_args():
 
 
 if __name__ == "__main__":
-    test_parse_args()
+    pytest.main()
