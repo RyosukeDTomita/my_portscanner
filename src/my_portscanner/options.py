@@ -1,5 +1,6 @@
 # coding: utf-8
 import argparse
+from .version import __version__
 
 
 def parse_args() -> dict:
@@ -16,6 +17,7 @@ def parse_args() -> dict:
     )
     parser.add_argument("-oN", "--file_txt", help="output txt file name.", type=str)
     parser.add_argument("-p", "--port", help="port number lists", type=str)
+    parser.add_argument("-v", "--version", action="version", version=__version__)
     p = parser.parse_args()
 
     # 引数のport番号をint型のリストに変換する。

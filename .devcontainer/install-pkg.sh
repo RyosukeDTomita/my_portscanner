@@ -6,6 +6,7 @@ package_list="net-tools \
   unzip \
   zip \
   vim \
+  neovim \
   jq \
   less \
   git \

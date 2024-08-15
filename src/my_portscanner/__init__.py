@@ -2,7 +2,6 @@
 import socket
 import re
 from .options import parse_args
-from .toml_parser import get_project_version
 from .get_datetime import get_datetime_now
 from .scan_tools import ConnectScan
 from .version import __version__
