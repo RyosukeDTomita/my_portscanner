@@ -6,12 +6,14 @@ package_list="net-tools \
   unzip \
   zip \
   vim \
+  neovim \
   jq \
   less \
   git \
+  ca-certificates
 "
-apt update -y
-apt install -y --no-install-recommends ${package_list[@]}
+apt-get update -y
+apt-get install -y --no-install-recommends ${package_list[@]}
 rm -rf /var/lib/lists
 
 # hadolint

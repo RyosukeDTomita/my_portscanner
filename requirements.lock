@@ -12,11 +12,23 @@
 -e file:.
 argparse==1.4.0
     # via my-portscanner
+freezegun==1.5.1
+    # via my-portscanner
 iniconfig==2.0.0
     # via pytest
 packaging==24.1
     # via pytest
+pip==24.2
+    # via my-portscanner
 pluggy==1.5.0
     # via pytest
 pytest==8.3.2
+    # via my-portscanner
+python-dateutil==2.9.0.post0
+    # via freezegun
+pytz==2024.1
+    # via my-portscanner
+six==1.16.0
+    # via python-dateutil
+tomli==2.0.1
     # via my-portscanner

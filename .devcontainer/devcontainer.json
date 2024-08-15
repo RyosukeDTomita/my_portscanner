@@ -7,10 +7,8 @@
   "service": "python-environment", // compose.yamlのサービス名
   "workspaceFolder": "/app",
   "overrideCommand": true, // コンテナを起動したままにする DockerfileのCMDで永続するコマンドを実行しているなら不要
-  "postCreateCommand": "./install-pkg.sh",
-  "postStartCommand": "PATH=$PATH:$(aqua root-dir)/bin", // DevContainerのビルド前，実行前にローカルでaquaでインストールしたツールのパスを通す
-  "postAttachCommand": "PATH=$PATH:$(aqua root-dir)/bin",
-
+  // Dev Container起動時に開発ツールをインストール
+  "postCreateCommand": "./.devcontainer/install-pkg.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -19,7 +17,8 @@
         "oderwat.indent-rainbow",
         "ionutvmi.path-autocomplete",
         "ms-python.black-formatter",
-        "ms-python.flake8"
+        "ms-python.flake8",
+        "njpwerner.autodocstring"
       ]
     }
   }

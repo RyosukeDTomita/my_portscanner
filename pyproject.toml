@@ -1,5 +1,5 @@
 [project]
-name = "my-portscanner"
+name = "my_portscanner"
 version = "0.1.0"
 description = "Add your description here"
 authors = [
@@ -8,8 +8,15 @@ authors = [
 dependencies = [
     "pytest>=8.3.2",
     "argparse>=1.4.0",
+    "tomli>=2.0.1",
+    "pytz>=2024.1",
+    "freezegun>=1.5.1",
+    "pip>=24.2",
 ]
 readme = "README.md"
+license = {file = "LICENSE"}
+
+
 requires-python = ">= 3.8"
 
 [build-system]
@@ -20,8 +27,12 @@ build-backend = "hatchling.build"
 managed = true
 dev-dependencies = []
 
+
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/my_portscanner"]
+
+[project.scripts]
+my_portscanner = "my_portscanner:main"

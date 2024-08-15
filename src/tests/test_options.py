@@ -1,7 +1,6 @@
 # cofing:utf-8
-import pytest
 import sys
-
+import pytest
 from my_portscanner import options
 
 
@@ -16,4 +15,4 @@ def test_parse_args():
 
 
 if __name__ == "__main__":
-    test_parse_args()
+    pytest.main()
