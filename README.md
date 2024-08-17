@@ -1,14 +1,15 @@
 # MY PORT SCANNER like nmap
 
 ![un license](https://img.shields.io/github/license/RyosukeDTomita/my_portscanner)
+[![pytest](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/pytest.yaml/badge.svg)](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/pytest.yaml)
 
 ## INDEX
 
 - [ABOUT](#about)
-- [LICENSE](#license)
 - [ENVIRONMENT](#environment)
 - [PREPARING](#preparing)
 - [HOW TO USE](#how-to-use)
+- [DEVELOPER MEMO](#developer-memo)
 
 ---
 
@@ -33,12 +34,6 @@ options:
   -p PORT, --port PORT  port number lists
   -v, --version         show program's version number and exit
 ```
-
----
-
-## LICENSE
-
-[unlicense](./LICENSE)
 
 ---
 
@@ -77,3 +72,14 @@ docker run -it my_portscanner localhost -p 22
 > ```shell
 > docker compose run my_portscanner_app localhost
 > ```
+
+---
+
+## DEVELOPER MEMO
+
+### before creating version tag
+
+Update version info
+- Dockerfile
+- src/my_portscanner/version.py
+- ./pyproject.toml

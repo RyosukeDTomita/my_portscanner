@@ -3,7 +3,6 @@
 FROM debian:bookworm-20240812 AS devcontainer
 
 ARG PYTHON_VERSION=3.12.4
-SHELL ["/bin/bash", "-c"]
 
 WORKDIR /app
 COPY ../ .
@@ -35,11 +34,11 @@ EOF
 FROM python:3.12.4-slim-bullseye AS run
 ARG VERSION="0.1.0"
 
-LABEL version=${VERSION} \
+LABEL version="${VERSION}" \
       author="RyosukeDTomita" \
       docker_compose_build="docker buildx bake" \
       docker_build="docker buildx build . -t my_portscanner" \
-      docker_compose_run="docker compose run my_portscanner_app localhost"
+      docker_compose_run="docker compose run my_portscanner_app localhost" \
       docker_run="docker run my_portscanner localhost"
 
 

@@ -4,7 +4,7 @@
     "../compose.yaml",
     "compose.yaml"
   ],
-  "service": "python-environment", // compose.yamlのサービス名
+  "service": "my_portscanner_app", // compose.yamlのサービス名
   "workspaceFolder": "/app",
   "overrideCommand": true, // コンテナを起動したままにする DockerfileのCMDで永続するコマンドを実行しているなら不要
   // Dev Container起動時に開発ツールをインストール
