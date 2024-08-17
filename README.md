@@ -1,6 +1,7 @@
 # MY PORT SCANNER like nmap
 
 ![un license](https://img.shields.io/github/license/RyosukeDTomita/my_portscanner)
+[![pytest](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/pytest.yaml/badge.svg)](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/pytest.yaml)
 
 ## INDEX
 
