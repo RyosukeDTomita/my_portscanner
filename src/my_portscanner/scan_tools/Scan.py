@@ -8,6 +8,16 @@ class Scan:
     target_ip: str
     target_port_list: list[int]
 
+    def __init__(self, *args, **kwargs):
+        """_summary_
+
+        継承専用のクラスのため，直接インスタンス化できないようにする。
+        Raises:
+            TypeError: _description_
+        """
+        if type(self) is Scan:
+            raise TypeError("Scan is an abstract class and cannot be instantiated directly")
+
     @abstractmethod
     def run(self) -> None:
         """_summary_

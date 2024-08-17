@@ -1,5 +1,4 @@
 # coding: utf-8
-import pytest
 from freezegun import freeze_time
 from my_portscanner import get_datetime
 
@@ -15,4 +14,4 @@ def test_get_datetime():
 
 
 if __name__ == "__main__":
-    pytest.main()
+    test_get_datetime()
