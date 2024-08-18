@@ -44,14 +44,16 @@ LABEL version="${VERSION}" \
 
 WORKDIR /app
 
+ARG USER_NAME="root"
+# FIXME: コンテナ内でsynパケットを生成するのに管理者権限が必要なので暫定対応
 # create execution user
-ARG USER_NAME="sigma"
-RUN <<EOF
-echo 'Creating ${USER_NAME} group.'
-addgroup ${USER_NAME}
-echo 'Creating ${USER_NAME} user.'
-adduser --ingroup ${USER_NAME} --gecos "my_portscanner user" --shell /bin/bash --no-create-home --disabled-password ${USER_NAME}
-EOF
+# ARG USER_NAME="sigma"
+# RUN <<EOF
+# echo 'Creating ${USER_NAME} group.'
+# addgroup ${USER_NAME}
+# echo 'Creating ${USER_NAME} user.'
+# adduser --ingroup ${USER_NAME} --gecos "my_portscanner user" --shell /bin/bash --no-create-home --disabled-password ${USER_NAME}
+# EOF
 
 COPY --from=devcontainer --chown=${USER_NAME}:${USER_NAME} ["/app/dist/my_portscanner-${VERSION}-py3-none-any.whl", "/app/dist/my_portscanner-${VERSION}-py3-none-any.whl"]
 
@@ -59,6 +61,6 @@ RUN <<EOF
 python3 -m pip install /app/dist/my_portscanner-${VERSION}-py3-none-any.whl
 EOF
 
-USER ${USER_NAME}
+#USER ${USER_NAME}
 
 ENTRYPOINT ["my_portscanner"]
