@@ -14,6 +14,11 @@ def main():
         f"Starting my_portscanner {__version__} ( https://github.com/RyosukeDTomita/my_portscanner ) at {get_datetime_now()}"
     )
 
+    # localhostを指定したスキャンはコンテナ内のlocalhostを指すので無効にする。
+    if args["target_ip"] is "localhost" or args["target_ip"] is "127.0.0.1":
+        print("When executed via `docker run`, a scan targeting `localhost` is not valid.")
+        exit()
+
     # target_ipがipアドレスの形式でない場合はhost名を名前解決する。
     match = re.match(
         r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", args["target_ip"]
