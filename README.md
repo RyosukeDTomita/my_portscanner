@@ -16,6 +16,18 @@
 ## ABOUT
 
 Full scratch built [nmap](https://nmap.org/) respect port scanner.
+- EXAMPLE
+
+```shell
+docker run my_portscanner 192.168.150.35 -p 22,80,443,3306,5432
+Starting my_portscanner 0.1.0 ( https://github.com/RyosukeDTomita/my_portscanner ) at 2024-08-18 20:06 JST
+my_portscanner scan report for 192.168.150.35 (192.168.150.35)
+connect scan
+PORT       STATE SERVICE
+22/tcp     open  unknown
+```
+
+- HELP
 
 ```shell
 docker run my_portscanner -h
