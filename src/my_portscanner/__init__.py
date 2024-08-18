@@ -4,6 +4,7 @@ import re
 from .options import parse_args
 from .get_datetime import get_datetime_now
 from .scan_tools import ConnectScan
+from .scan_tools import SynScan
 from .version import __version__
 
 
@@ -29,11 +30,18 @@ def main():
         target_ip = args["target_ip"]
     print(f"my_portscanner scan report for {args["target_ip"]} ({target_ip})")
 
-    if args["connect_scan"]:
+    if args["scan_type"] == "connect":
         print("connect scan")
         connect_scan = ConnectScan(target_ip=target_ip, target_port_list=args["port"])
         connect_scan.run()
         connect_scan.print_result()
-
+    elif args["scan_type"] == "stealth":
+        print("stealth scan")
+        syn_scan = SynScan(target_ip=target_ip, target_port_list=args["port"])
+        syn_scan.run()
+        syn_scan.print_result()
+    else:
+        print("invalid scan type")
+        exit()
 
 __all__ = ["main"]

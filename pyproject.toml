@@ -1,6 +1,6 @@
 [project]
 name = "my_portscanner"
-version = "0.1.0"
+version = "0.1.1"
 description = "Add your description here"
 authors = [
     { name = "RyosukeDTomita", email = "d310151c2@gmail.com" }
@@ -12,6 +12,7 @@ dependencies = [
     "pytz>=2024.1",
     "freezegun>=1.5.1",
     "pip>=24.2",
+    "scapy>=2.5.0",
 ]
 readme = "README.md"
 license = {file = "LICENSE"}
