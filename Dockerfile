@@ -32,7 +32,7 @@ EOF
 
 
 FROM python:3.12.4-slim-bullseye AS run
-ARG VERSION="0.1.0"
+ARG VERSION="0.1.1"
 
 LABEL version="${VERSION}" \
       author="RyosukeDTomita" \
