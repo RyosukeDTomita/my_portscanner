@@ -1,6 +1,7 @@
 # coding utf-8
 import socket
 import re
+import sys
 from .options import parse_args
 from .get_datetime import get_datetime_now
 from .scan_tools import ConnectScan
@@ -17,7 +18,8 @@ def main():
 
     # localhostを指定したスキャンはコンテナ内のlocalhostを指すので無効にする。
     if ((args["target_ip"] == "localhost") or (args["target_ip"] == "127.0.0.1")):
-        print("[WARNING]: When executed via `docker run`, scan targeting `localhost` is not valid.")
+        print("[WARNING]: When executed via `docker run`, scan targeting `localhost` is not valid.\nQUIITING!")
+        sys.exit(1)
 
     # target_ipがipアドレスの形式でない場合はhost名を名前解決する。
     match = re.match(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", args["target_ip"])
@@ -42,7 +44,7 @@ def main():
         syn_scan.print_result()
     else:
         print("invalid scan type")
-        exit()
+        sys.exit(1)
 
 
 __all__ = ["main"]

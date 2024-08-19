@@ -1,4 +1,5 @@
 # coding: utf-8
+import sys
 from scapy.all import IP, TCP, sr1, conf
 from dataclasses import dataclass
 from .Scan import Scan
@@ -25,11 +26,12 @@ class SynScan(Scan):
                 print(
                     "You requested a scan type which requires root privileges.\nQUITTING!"
                 )
+                sys.exit(1)
 
             try:
                 response_packet.haslayer(TCP)
             except AttributeError:
-                print(f"setup_target: failed to determine route to {self.target_ip}")
+                continue
             # SYN/ACKパケットが返ってきた際にopen portとしてリストに追加
             if response_packet[TCP].flags == "SA":
                 self.open_port_list.append(port)
