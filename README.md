@@ -33,7 +33,7 @@ PORT       STATE SERVICE
 
 ```shell
 docker run my_portscanner -h
-usage: my_portscanner [-h] [-sT CONNECT_SCAN] [-oN FILE_TXT] [-p PORT] [-v]
+usage: my_portscanner [-h] [-sT] [-sS] [-oN FILE_TXT] [-p PORT] [--version]
                       target_ip
 
 positional arguments:
@@ -41,12 +41,12 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -sT CONNECT_SCAN, --connect_scan CONNECT_SCAN
-                        TCP connect Scan
+  -sT, --connect_scan   TCP connect scan
+  -sS, --stealth_scan   TCP SYN scan
   -oN FILE_TXT, --file_txt FILE_TXT
                         output txt file name.
   -p PORT, --port PORT  port number lists
-  -v, --version         show program's version number and exit
+  --version             show program's version number and exit
 ```
 
 ---

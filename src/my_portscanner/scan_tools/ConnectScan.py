@@ -11,7 +11,7 @@ class ConnectScan(Scan):
         """_summary_
         run connect scan
 
-        # NOTE: https://docs.python.org/ja/3/library/socket.html#socket.socket.connect_ex によるとconnece_exは例外を送出せずにエラーコードを戻り値として返すため，例外処理をしない。
+        NOTE: https://docs.python.org/ja/3/library/socket.html#socket.socket.connect_ex によるとconnece_exは例外を送出せずにエラーコードを戻り値として返すため，例外処理をしない。
         Returns:
             list[int]: open ports list
         """

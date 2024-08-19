@@ -13,14 +13,20 @@ def parse_args() -> dict:
     parser = argparse.ArgumentParser()
     parser.add_argument("target_ip", help="set target ip address.", type=str)
     parser.add_argument(
-        "-sT", "--connect_scan", action="store_true", help="TCP connect scan",
+        "-sT",
+        "--connect_scan",
+        action="store_true",
+        help="TCP connect scan",
     )
     parser.add_argument(
-        "-sS", "--stealth_scan", action="store_true", help="TCP SYN scan",
+        "-sS",
+        "--stealth_scan",
+        action="store_true",
+        help="TCP SYN scan",
     )
     parser.add_argument("-oN", "--file_txt", help="output txt file name.", type=str)
     parser.add_argument("-p", "--port", help="port number lists", type=str)
-    parser.add_argument("-v", "--version", action="version", version=__version__)
+    parser.add_argument("--version", action="version", version=__version__)
     p = parser.parse_args()
 
     if p.port is not None:
