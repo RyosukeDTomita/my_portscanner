@@ -6,7 +6,6 @@ from my_portscanner.scan_tools.ConnectScan import ConnectScan
 
 
 class TestConnectScan(unittest.TestCase):
-
     def setUp(self):
         """
         テスト実行時に毎回実行され，

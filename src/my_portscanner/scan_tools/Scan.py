@@ -16,10 +16,12 @@ class Scan:
             TypeError: _description_
         """
         if type(self) is Scan:
-            raise TypeError("Scan is an abstract class and cannot be instantiated directly")
+            raise TypeError(
+                "Scan is an abstract class and cannot be instantiated directly"
+            )
 
     @abstractmethod
-    def run(self) -> None:
+    def run(self) -> list[int]:
         """_summary_
         port scanを実行するabstract method
         """
