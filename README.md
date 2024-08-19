@@ -3,7 +3,7 @@
 ![un license](https://img.shields.io/github/license/RyosukeDTomita/my_portscanner)
 [![pytest](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/pytest.yaml/badge.svg)](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/pytest.yaml)
 [![latest release](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/release.yaml/badge.svg)](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/release.yaml)
-
+[![GitHub Container Registry](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/packages.yaml/badge.svg)](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/packages.yaml)
 
 ## INDEX
 
