@@ -14,6 +14,7 @@ apt-get install -y --no-install-recommends wget ca-certificates
 wget -q https://github.com/aquaproj/aqua/releases/download/v2.30.0/aqua_linux_amd64.tar.gz
 rm -rf /usr/local/bin/aqua && tar -C /usr/local/bin/ -xzf aqua_linux_amd64.tar.gz
 rm aqua_linux_amd64.tar.gz
+rm -rf /var/lib/lists
 EOF
 
 # install packages and some tools.
@@ -44,23 +45,29 @@ LABEL version="${VERSION}" \
 
 WORKDIR /app
 
-ARG USER_NAME="root"
-# FIXME: コンテナ内でsynパケットを生成するのに管理者権限が必要なので暫定対応
-# create execution user
-# ARG USER_NAME="sigma"
-# RUN <<EOF
-# echo 'Creating ${USER_NAME} group.'
-# addgroup ${USER_NAME}
-# echo 'Creating ${USER_NAME} user.'
-# adduser --ingroup ${USER_NAME} --gecos "my_portscanner user" --shell /bin/bash --no-create-home --disabled-password ${USER_NAME}
-# EOF
+# create execution user with sudo
+ARG USER_NAME="sigma"
+RUN <<EOF
+apt-get update -y
+apt-get install -y --no-install-recommends sudo
+echo 'Creating ${USER_NAME} group.'
+addgroup ${USER_NAME}
+echo 'Creating ${USER_NAME} user.'
+adduser --ingroup ${USER_NAME} --gecos "my_portscanner user" --shell /bin/bash --no-create-home --disabled-password ${USER_NAME}
+echo 'using sudo'
+usermod -aG sudo ${USER_NAME}
+echo "${USER_NAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+rm -rf /var/lib/lists
+EOF
 
 COPY --from=devcontainer --chown=${USER_NAME}:${USER_NAME} ["/app/dist/my_portscanner-${VERSION}-py3-none-any.whl", "/app/dist/my_portscanner-${VERSION}-py3-none-any.whl"]
 
+# install app
 RUN <<EOF
 python3 -m pip install /app/dist/my_portscanner-${VERSION}-py3-none-any.whl
 EOF
 
-#USER ${USER_NAME}
+USER ${USER_NAME}
 
-ENTRYPOINT ["my_portscanner"]
+ENTRYPOINT ["sudo", "my_portscanner"]
+
