@@ -10,6 +10,7 @@
 - [ABOUT](#about)
 - [ENVIRONMENT](#environment)
 - [PREPARING](#preparing)
+- [INSTALL](#install)
 - [HOW TO USE](#how-to-use)
 - [DEVELOPER MEMO](#developer-memo)
 
@@ -57,7 +58,27 @@ options:
 
 ---
 
-## PREPARING
+## INSTALL
+
+### pulling from GitHub Container Registry
+
+```shell
+docker pull ghcr.io/ryosukedtomita/my_portscanner:latest
+docker tag ghcr.io/ryosukedtomita/my_portscanner my_portscanner
+docker image ls
+REPOSITORY                              TAG       IMAGE ID       CREATED          SIZE
+my_portscanner                          latest    59ed4a2aff25   15 minutes ago   195MB
+ghcr.io/ryosukedtomita/my_portscanner   latest    59ed4a2aff25   15 minutes ago   195MB
+```
+
+### install from Releases
+
+```shell
+wget https://github.com/RyosukeDTomita/my_portscanner/releases/download/0.1.1/default.dist.my_portscanner-0.1.1-py3-none-any.whl
+pip install ./default.dist.my_portscanner-0.1.1-py3-none-any.whl
+```
+
+### Local install
 
 1. clone this repository
 2. docker build
@@ -76,9 +97,11 @@ docekr buildx build -t my_portscanner .
 
 ## HOW TO USE
 
+### running Docker
+
 ```shell
 # example
-docker run -it my_portscanner localhost -p 22
+docker run -it my_portscanner <FQDN or IP>
 ```
 
 > [!NOTE]
@@ -86,6 +109,13 @@ docker run -it my_portscanner localhost -p 22
 > ```shell
 > docker compose run my_portscanner_app localhost
 > ```
+
+### running on local
+
+```shell
+my_portscanner <FQDN or IP>
+sudo my_portscanner <FQDN or IP > -sS
+```
 
 ---
 
