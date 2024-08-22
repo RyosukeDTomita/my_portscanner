@@ -33,17 +33,15 @@ EOF
 
 
 FROM python:3.12.4-slim-bullseye AS run
-ARG VERSION="0.1.2"
+WORKDIR /app
 
+ARG VERSION="0.1.2"
 LABEL version="${VERSION}" \
       author="RyosukeDTomita" \
       docker_compose_build="docker buildx bake" \
       docker_build="docker buildx build . -t my_portscanner" \
       docker_compose_run="docker compose run my_portscanner_app localhost" \
       docker_run="docker run my_portscanner localhost"
-
-
-WORKDIR /app
 
 # create execution user with sudo
 ARG USER_NAME="sigma"
@@ -68,6 +66,5 @@ python3 -m pip install /app/dist/my_portscanner-${VERSION}-py3-none-any.whl
 EOF
 
 USER ${USER_NAME}
-
 ENTRYPOINT ["sudo", "my_portscanner"]
 

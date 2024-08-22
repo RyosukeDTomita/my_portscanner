@@ -32,4 +32,6 @@ jobs:
       - name: Push Docker image to GitHub Container Registry
         run: |
           docker tag ${{ env.IMAGE_NAME}} ghcr.io/${{ env.GITHUB_CONTAINER_REGISTRY_TAG }}:latest
+          docker tag ${{ env.IMAGE_NAME}} ghcr.io/${{ env.GITHUB_CONTAINER_REGISTRY_TAG }}:$(docker run my_portscanner --version)
           docker push ghcr.io/${{ env.GITHUB_CONTAINER_REGISTRY_TAG }}:latest
+          docker push ghcr.io/${{ env.GITHUB_CONTAINER_REGISTRY_TAG }}:$(docker run my_portscanner --version)
