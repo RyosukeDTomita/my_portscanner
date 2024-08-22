@@ -25,12 +25,22 @@ def parse_args() -> dict:
         help="TCP SYN scan",
     )
     parser.add_argument("-oN", "--file_txt", help="output txt file name.", type=str)
-    parser.add_argument("-p", "--port", help="port number lists", type=str)
+    parser.add_argument(
+        "-p",
+        "--port",
+        help="port number lists. port number range e.g: -p 22,80,443 -p 22-30",
+        type=str,
+    )
     parser.add_argument("--version", action="version", version=__version__)
     p = parser.parse_args()
 
-    if p.port is not None:
+    if "," in p.port:
         port_list = [int(x) for x in p.port.split(",")]
+    elif "-" in p.port:
+        port_list = [
+            int(x)
+            for x in range(int(p.port.split("-")[0]), int(p.port.split("-")[1]) + 1, 1)
+        ]
     else:
         # default port list
         port_list = [22, 80, 443]
