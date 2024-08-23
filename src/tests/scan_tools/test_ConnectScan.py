@@ -15,6 +15,7 @@ class TestConnectScan(unittest.TestCase):
         self.target_ip = "192.168.150.2"
         self.target_port_list = [22, 80, 443]
         self.expected_open_ports = [22, 443]
+        self.max_rtt_timeout = 100
 
         # mock_socket_instanceの作成
         self.mock_socket_instance = MagicMock()
@@ -35,7 +36,9 @@ class TestConnectScan(unittest.TestCase):
         mock_socket.return_value = self.mock_socket_instance
 
         scan = ConnectScan(
-            target_ip=self.target_ip, target_port_list=self.target_port_list
+            target_ip=self.target_ip,
+            target_port_list=self.target_port_list,
+            max_rtt_timeout=self.max_rtt_timeout,
         )
         open_ports = scan.run()
 
@@ -46,7 +49,9 @@ class TestConnectScan(unittest.TestCase):
         mock_socket.return_value = self.mock_socket_instance
 
         scan = ConnectScan(
-            target_ip=self.target_ip, target_port_list=self.target_port_list
+            target_ip=self.target_ip,
+            target_port_list=self.target_port_list,
+            max_rtt_timeout=self.max_rtt_timeout,
         )
         scan.run()
 

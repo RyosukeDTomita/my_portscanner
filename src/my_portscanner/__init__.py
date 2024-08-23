@@ -34,12 +34,12 @@ def main():
 
     if args["scan_type"] == "connect":
         print("connect scan")
-        connect_scan = ConnectScan(target_ip=target_ip, target_port_list=args["port"])
+        connect_scan = ConnectScan(target_ip=target_ip, target_port_list=args["port"], max_rtt_timeout=args["max_rtt_timeout"])
         connect_scan.run()
         connect_scan.print_result()
     elif args["scan_type"] == "stealth":
         print("stealth scan")
-        syn_scan = SynScan(target_ip=target_ip, target_port_list=args["port"])
+        syn_scan = SynScan(target_ip=target_ip, target_port_list=args["port"], max_rtt_timeout=args["max_rtt_timeout"])
         syn_scan.run()
         syn_scan.print_result()
     else:
