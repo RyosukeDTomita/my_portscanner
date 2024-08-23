@@ -17,6 +17,7 @@ class TestSynScan(unittest.TestCase):
         self.target_ip = "192.168.150.2"
         self.target_port_list = [22, 80, 443]
         self.expected_open_ports = [22, 443]
+        self.max_rtt_timeout = 100
 
         def sr1_side_effect(packet, timeout):
             # 管理者権限がない場合PermissionErrorを発生させる
@@ -37,7 +38,11 @@ class TestSynScan(unittest.TestCase):
 
     @patch("my_portscanner.scan_tools.SynScan.sr1")
     def test_run(self, mock_sr1):
-        scan = SynScan(target_ip=self.target_ip, target_port_list=self.target_port_list)
+        scan = SynScan(
+            target_ip=self.target_ip,
+            target_port_list=self.target_port_list,
+            max_rtt_timeout=self.max_rtt_timeout,
+        )
 
         mock_sr1.side_effect = self.sr1_side_effect
 
@@ -57,7 +62,11 @@ class TestSynScan(unittest.TestCase):
             "You requested a scan type which requires root privileges.\nQUITTING!"
         )
 
-        scan = SynScan(target_ip=self.target_ip, target_port_list=self.target_port_list)
+        scan = SynScan(
+            target_ip=self.target_ip,
+            target_port_list=self.target_port_list,
+            max_rtt_timeout=self.max_rtt_timeout,
+        )
 
         # NOTE: mock_getuid.return_valueによってuid=0以外にmockしてもうまくPermissionErrorを発生させることができなかったので直接PermissionErrorを発生させる
         mock_sr1.side_effect = PermissionError

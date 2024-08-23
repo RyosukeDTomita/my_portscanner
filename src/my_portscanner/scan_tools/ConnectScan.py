@@ -18,6 +18,7 @@ class ConnectScan(Scan):
         self.open_port_list = []
         for port in self.target_port_list:
             s = socket.socket()
+            s.settimeout(self.max_rtt_timeout / 1000)
 
             error_code = s.connect_ex((self.target_ip, port))  #
             if error_code == 0:

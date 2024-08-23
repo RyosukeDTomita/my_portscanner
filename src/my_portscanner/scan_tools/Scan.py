@@ -7,6 +7,7 @@ from abc import abstractmethod
 class Scan:
     target_ip: str
     target_port_list: list[int]
+    max_rtt_timeout: int
 
     def __init__(self, *args, **kwargs):
         """_summary_
