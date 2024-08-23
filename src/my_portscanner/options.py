@@ -24,7 +24,6 @@ def parse_args() -> dict:
         action="store_true",
         help="TCP SYN scan",
     )
-    parser.add_argument("-oN", "--file_txt", help="output txt file name.", type=str)
     parser.add_argument(
         "-p",
         "--port",
@@ -49,7 +48,6 @@ def parse_args() -> dict:
 
     args = {
         "target_ip": p.target_ip,
-        "file_txt": p.file_txt,
         "port": port_list,
         "scan_type": scan_type,
         "max_rtt_timeout": max_rtt_timeout,

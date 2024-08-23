@@ -4,11 +4,10 @@ from my_portscanner import options
 
 
 def test_parse_args():
-    test_args = ["options.py", "192.168.1.2", "-oN", "output.txt", "-p", "80,443"]
+    test_args = ["options.py", "192.168.1.2", "-p", "80,443"]
     sys.argv = test_args
     args = options.parse_args()
     assert args["target_ip"] == "192.168.1.2"
-    assert args["file_txt"] == "output.txt"
     assert args["port"] == [80, 443]
 
 
