@@ -1,6 +1,6 @@
 [project]
 name = "my_portscanner"
-version = "0.1.2"
+version = "0.1.3"
 description = "Add your description here"
 authors = [
     { name = "RyosukeDTomita", email = "d310151c2@gmail.com" }

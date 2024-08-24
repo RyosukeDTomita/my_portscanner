@@ -35,7 +35,7 @@ EOF
 FROM python:3.12.4-slim-bullseye AS run
 WORKDIR /app
 
-ARG VERSION="0.1.2"
+ARG VERSION="0.1.3"
 LABEL version="${VERSION}" \
       author="RyosukeDTomita" \
       docker_compose_build="docker buildx bake" \
