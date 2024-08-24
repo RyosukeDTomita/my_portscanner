@@ -17,8 +17,10 @@ def main():
     )
 
     # localhostを指定したスキャンはコンテナ内のlocalhostを指すので無効にする。
-    if ((args["target_ip"] == "localhost") or (args["target_ip"] == "127.0.0.1")):
-        print("[WARNING]: When executed via `docker run`, scan targeting `localhost` is not valid.\nQUIITING!")
+    if (args["target_ip"] == "localhost") or (args["target_ip"] == "127.0.0.1"):
+        print(
+            "[WARNING]: When executed via `docker run`, scan targeting `localhost` is not valid.\nQUIITING!"
+        )
         sys.exit(1)
 
     # target_ipがipアドレスの形式でない場合はhost名を名前解決する。
@@ -34,12 +36,20 @@ def main():
 
     if args["scan_type"] == "connect":
         print("connect scan")
-        connect_scan = ConnectScan(target_ip=target_ip, target_port_list=args["port"], max_rtt_timeout=args["max_rtt_timeout"])
+        connect_scan = ConnectScan(
+            target_ip=target_ip,
+            target_port_list=args["port"],
+            max_rtt_timeout=args["max_rtt_timeout"],
+        )
         connect_scan.run()
         connect_scan.print_result()
     elif args["scan_type"] == "stealth":
         print("stealth scan")
-        syn_scan = SynScan(target_ip=target_ip, target_port_list=args["port"], max_rtt_timeout=args["max_rtt_timeout"])
+        syn_scan = SynScan(
+            target_ip=target_ip,
+            target_port_list=args["port"],
+            max_rtt_timeout=args["max_rtt_timeout"],
+        )
         syn_scan.run()
         syn_scan.print_result()
     else:

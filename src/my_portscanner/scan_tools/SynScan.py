@@ -7,18 +7,18 @@ from .Scan import Scan
 
 @dataclass
 class SynScan(Scan):
-    def run(self) -> list[int]:
+    def run(self) -> list[dict]:
         """
         run SYN scan
 
         Returns:
-            list[int]: open ports list
+            scan_result: list[dict]
+            e.g: [{"port": port, "state": "open"}, "port": port, "state": "closed"} ...]
         """
-        self.open_port_list = []
+        self.scan_result = []
 
         conf.verb = 0  # packet送信時のログをSTDOUTに表示しない
         for port in self.target_port_list:
-            # SYN packetを作成して送信する
             syn_packet = IP(dst=self.target_ip) / TCP(dport=port, flags="S")
             try:
                 response_packet = sr1(syn_packet, timeout=self.max_rtt_timeout / 1000)
@@ -28,12 +28,20 @@ class SynScan(Scan):
                 )
                 sys.exit(1)
 
+            # FWなどによってパケットがフィルタリングされた場合にはレスポンスなし
+            if response_packet is None:
+                self.scan_result.append({"port": port, "state": "filtered"})
+                continue
+
             try:
                 response_packet.haslayer(TCP)
             except AttributeError:
                 continue
             # SYN/ACKパケットが返ってきた際にopen portとしてリストに追加
             if response_packet[TCP].flags == "SA":
-                self.open_port_list.append(port)
+                self.scan_result.append({"port": port, "state": "open"})
+            # closed portの場合はRSTパケットが返ってくる
+            elif response_packet[TCP].flags == "RA":
+                self.scan_result.append({"port": port, "state": "closed"})
 
-        return self.open_port_list
+        return self.scan_result
