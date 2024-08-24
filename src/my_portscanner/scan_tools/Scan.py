@@ -33,7 +33,10 @@ class Scan:
         port scanの結果を表示する
         """
         # port6桁+/tcpで10桁
-        print(f"{"PORT":<10} STATE SERVICE")
-        for open_port in self.open_port_list:
-            # FIXME: open close以外のステータスを判別できるようになったら直す。
-            print(f"{open_port}/tcp".ljust(10) + " " + f"{'open':<5} unknown")
+        print(f"{"PORT":<10} {"STATE":<8} SERVICE")
+        for port_info in self.scan_result:
+            print(
+                f"{port_info["port"]}/tcp".ljust(10)
+                + " "
+                + f"{port_info["state"]:<8} unknown"
+            )

@@ -15,22 +15,25 @@ class TestSynScan(unittest.TestCase):
         """
         # test data
         self.target_ip = "192.168.150.2"
-        self.target_port_list = [22, 80, 443]
-        self.expected_open_ports = [22, 443]
+        self.target_port_list = [22, 80, 443, 8080]
+        self.expected_open_ports = [80, 443]
+        self.expected_closed_ports = [8080]
+        self.expected_filterd_ports = [22]
         self.max_rtt_timeout = 100
 
         def sr1_side_effect(packet, timeout):
-            # 管理者権限がない場合PermissionErrorを発生させる
-            # NOTE: UID=0の時rootまたはsudo
+            mock_response = MagicMock()
             if packet[TCP].dport in self.expected_open_ports:
-                mock_response = MagicMock()
                 mock_response.haslayer.return_value = True
                 mock_response[TCP].flags = "SA"
                 return mock_response
-            else:
-                mock_response = MagicMock()
-                mock_response.haslayer.return_value = False
+            elif packet[TCP].dport in self.expected_closed_ports:
+                mock_response.haslayer.return_value = True
+                mock_response[TCP].flags = "RA"
                 return mock_response
+            else:
+                # filterdの時は結果が返ってこない
+                return None
 
         self.sr1_side_effect = (
             sr1_side_effect  # test_runから参照するためにインスタンス変数に格納
@@ -46,9 +49,22 @@ class TestSynScan(unittest.TestCase):
 
         mock_sr1.side_effect = self.sr1_side_effect
 
-        open_ports = scan.run()
-        print(open_ports)
-        self.assertEqual(open_ports, self.expected_open_ports)
+        scan_result = scan.run()
+        assert [
+            port_info["port"]
+            for port_info in scan_result
+            if port_info["state"] == "open"
+        ] == self.expected_open_ports
+        assert [
+            port_info["port"]
+            for port_info in scan_result
+            if port_info["state"] == "closed"
+        ] == self.expected_closed_ports
+        assert [
+            port_info["port"]
+            for port_info in scan_result
+            if port_info["state"] == "filtered"
+        ] == self.expected_filterd_ports
 
     @patch("my_portscanner.scan_tools.SynScan.sr1")
     def test_run_raise_permission_error(self, mock_sr1):
@@ -69,6 +85,7 @@ class TestSynScan(unittest.TestCase):
         )
 
         # NOTE: mock_getuid.return_valueによってuid=0以外にmockしてもうまくPermissionErrorを発生させることができなかったので直接PermissionErrorを発生させる
+        # setUp()で作成したものとは別に例外を上げるside_effectを設定する。
         mock_sr1.side_effect = PermissionError
 
         # 標準出力をキャプチャ

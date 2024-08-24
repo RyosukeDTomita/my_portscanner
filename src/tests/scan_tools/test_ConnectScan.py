@@ -13,8 +13,10 @@ class TestConnectScan(unittest.TestCase):
         """
         # 共通のテストデータ
         self.target_ip = "192.168.150.2"
-        self.target_port_list = [22, 80, 443]
-        self.expected_open_ports = [22, 443]
+        self.target_port_list = [22, 80, 443, 8080]
+        self.expected_open_ports = [80, 443]
+        self.expected_closed_ports = [8080]
+        self.expected_filterd_ports = [22]
         self.max_rtt_timeout = 100
 
         # mock_socket_instanceの作成
@@ -25,8 +27,10 @@ class TestConnectScan(unittest.TestCase):
             ip, port = address
             if port in self.expected_open_ports:
                 return 0  # open
+            elif port in self.expected_closed_ports:
+                return 111  # closed
             else:
-                return 1  # close
+                return 11  # connect_exの戻り値が11の場合はtimeoutなのでfilteredとする
 
         self.mock_socket_instance.connect_ex.side_effect = connect_ex_side_effect
         return
@@ -40,9 +44,22 @@ class TestConnectScan(unittest.TestCase):
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
         )
-        open_ports = scan.run()
-
-        self.assertEqual(open_ports, self.expected_open_ports)
+        scan_result = scan.run()
+        assert [
+            port_info["port"]
+            for port_info in scan_result
+            if port_info["state"] == "open"
+        ] == self.expected_open_ports
+        assert [
+            port_info["port"]
+            for port_info in scan_result
+            if port_info["state"] == "closed"
+        ] == self.expected_closed_ports
+        assert [
+            port_info["port"]
+            for port_info in scan_result
+            if port_info["state"] == "filtered"
+        ] == self.expected_filterd_ports
 
     @patch("my_portscanner.scan_tools.ConnectScan.socket.socket")
     def test_print_result(self, mock_socket):
@@ -66,8 +83,13 @@ class TestConnectScan(unittest.TestCase):
         sys.stdout = sys.__stdout__
         output = captured_output.getvalue().strip()
 
-        # 期待される出力
-        expected_output = "PORT       STATE SERVICE\n22/tcp     open  unknown\n443/tcp    open  unknown"
+        expected_output = (
+            f"{'PORT':<10} {'STATE':<8} SERVICE\n"
+            f"{'22/tcp':<10}" + " " + f"{'filtered':<8} unknown\n"
+            f"{'80/tcp':<10}" + " " + f"{'open':<8} unknown\n"
+            f"{'443/tcp':<10}" + " " + f"{'open':<8} unknown\n"
+            f"{'8080/tcp':<10}" + " " + f"{'closed':<8} unknown"
+        )
 
         self.assertEqual(output, expected_output)
 
