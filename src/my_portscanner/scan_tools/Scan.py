@@ -8,6 +8,7 @@ class Scan:
     target_ip: str
     target_port_list: list[int]
     max_rtt_timeout: int
+    max_parallelism: int
 
     def __init__(self, *args, **kwargs):
         """_summary_
@@ -20,6 +21,16 @@ class Scan:
             raise TypeError(
                 "Scan is an abstract class and cannot be instantiated directly"
             )
+    
+    def __str__(self) -> str:
+        """_summary_
+        インスタンスの情報を文字列で返す
+        """
+        if self.target_port_list == list(range(0, 65536)):
+            target_port_list_fmt = "all"
+        else:
+            target_port_list_fmt = self.target_port_list
+        return f"Scan(target_ip={self.target_ip}, target_port_list={target_port_list_fmt}, scan_type={self.__class__.__name__}, max_rtt_timeout={self.max_rtt_timeout}, max_parallelism={self.max_parallelism})"
 
     @abstractmethod
     def run(self) -> list[int]:

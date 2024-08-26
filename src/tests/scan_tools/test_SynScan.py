@@ -20,6 +20,7 @@ class TestSynScan(unittest.TestCase):
         self.expected_closed_ports = [8080]
         self.expected_filterd_ports = [22]
         self.max_rtt_timeout = 100
+        self.max_parallelism = 32
 
         def sr1_side_effect(packet, timeout):
             mock_response = MagicMock()
@@ -45,6 +46,7 @@ class TestSynScan(unittest.TestCase):
             target_ip=self.target_ip,
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
+            max_parallelism=self.max_parallelism,
         )
 
         mock_sr1.side_effect = self.sr1_side_effect
@@ -82,6 +84,7 @@ class TestSynScan(unittest.TestCase):
             target_ip=self.target_ip,
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
+            max_parallelism=self.max_parallelism,
         )
 
         # NOTE: mock_getuid.return_valueによってuid=0以外にmockしてもうまくPermissionErrorを発生させることができなかったので直接PermissionErrorを発生させる

@@ -45,6 +45,15 @@ def parse_args() -> dict:
         help="display my_portscanner version and exit",
         version=__version__,
     )
+    parser.add_argument(
+        "--max-parallelism", default=None, help="set max parallelism ", type=int
+    )
+    parser.add_argument(
+        "-d",
+        "--debug",
+        action="store_true",
+        help="display debug info",
+    )
     p = parser.parse_args()
 
     try:
@@ -63,6 +72,8 @@ def parse_args() -> dict:
         "port": port_list,
         "scan_type": scan_type,
         "max_rtt_timeout": p.max_rtt_timeout,
+        "max_parallelism": p.max_parallelism,
+        "debug": p.debug,
     }
     return args
 
