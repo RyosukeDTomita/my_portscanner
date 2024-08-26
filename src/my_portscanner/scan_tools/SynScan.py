@@ -17,6 +17,7 @@ class SynScan(Scan):
         """
         try:
             self.scan_result = asyncio.run(self._async_run())
+        # NOTE: 非同期処理により複数回PermissoinErrorが上がらないようにするため，例外の伝播を行っている。
         except PermissionError:
             print(
                 "You requested a scan type which requires root privileges.\nQUITTING!"
