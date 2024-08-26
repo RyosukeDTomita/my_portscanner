@@ -11,3 +11,5 @@ wheels/
 *.whl
 
 .env
+
+memo.txt
