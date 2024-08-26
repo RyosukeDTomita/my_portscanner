@@ -19,12 +19,42 @@ class TestConnectScan(unittest.TestCase):
         self.expected_filterd_ports = [22]
         self.max_rtt_timeout = 100
 
-    # FIXME: ConnectScanを非同期処理に変更してからtest_run()は動かなくなった
-    def test_run(self):
-        pass
+    @patch("my_portscanner.scan_tools.ConnectScan.socket.socket")
+    def test_port_scan(self, mock_socket):
+        def connext_ex_side_effect(target_tuple):
+            ip, port = target_tuple[0], target_tuple[1]
+            if port in self.expected_open_ports:
+                return 0
+            elif port in self.expected_closed_ports:
+                return 111
+            else:
+                return 11
+
+        mock_socket_instance = mock_socket.return_value
+        mock_socket_instance.connect_ex.side_effect = connext_ex_side_effect
+
+        scan = ConnectScan(
+            target_ip=self.target_ip,
+            target_port_list=self.target_port_list,
+            max_rtt_timeout=self.max_rtt_timeout,
+        )
+        scan_result = []
+        for port in self.target_port_list:
+            scan_result.append(scan._port_scan(port))
+        self.assertEqual(
+            scan_result,
+            [
+                {"port": 22, "state": "filtered"},
+                {"port": 80, "state": "open"},
+                {"port": 443, "state": "open"},
+                {"port": 8080, "state": "closed"},
+            ],
+        )
 
     def test_print_result(self):
-
+        """_summary_
+        print_resultで想定通りの出力がでるか確認するテスト
+        """
         scan = ConnectScan(
             target_ip=self.target_ip,
             target_port_list=self.target_port_list,
