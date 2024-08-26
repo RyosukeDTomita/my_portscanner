@@ -32,6 +32,11 @@ class Scan:
         """
         port scanの結果を表示する
         """
+        # 出力が100行を超えそうなときは，closed portsを非表示にする。
+        if len(self.scan_result) > 100:
+            self.scan_result = [
+                port_info for port_info in self.scan_result if port_info["state"] != "closed"
+            ]
         # port6桁+/tcpで10桁
         print(f"{"PORT":<10} {"STATE":<8} SERVICE")
         for port_info in self.scan_result:

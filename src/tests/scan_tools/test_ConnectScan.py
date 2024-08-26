@@ -76,7 +76,6 @@ class TestConnectScan(unittest.TestCase):
         captured_output = StringIO()
         sys.stdout = captured_output
 
-        # print_resultメソッドの実行
         scan.print_result()
 
         # 標準出力の内容を取得
@@ -91,6 +90,33 @@ class TestConnectScan(unittest.TestCase):
             f"{'8080/tcp':<10}" + " " + f"{'closed':<8} unknown"
         )
 
+        self.assertEqual(output, expected_output)
+
+    def test_print_result_remove_closed_ports_when_scan_result_is_long(self):
+        """_summary_
+        出力が100行を超える時はclosed portsを非表示になることを確認するテスト
+        """
+        scan = ConnectScan(
+            target_ip=self.target_ip,
+            target_port_list=self.target_port_list,
+            max_rtt_timeout=self.max_rtt_timeout,
+        )
+
+        # 100行以上のテストデータを作成
+        scan.scan_result = [{"port": i, "state": "closed"} for i in range(101)]
+
+        # 標準出力をキャプチャ
+        captured_output = StringIO()
+        sys.stdout = captured_output
+
+        scan.print_result()
+
+        # 標準出力の内容を取得
+        sys.stdout = sys.__stdout__
+        output = captured_output.getvalue().strip()
+
+        # 何も表示されないことを確認
+        expected_output = f"{'PORT':<10} {'STATE':<8} SERVICE"
         self.assertEqual(output, expected_output)
 
 
