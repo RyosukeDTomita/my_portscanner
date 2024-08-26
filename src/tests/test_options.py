@@ -3,12 +3,42 @@ import sys
 from my_portscanner import options
 
 
-def test_parse_args():
-    test_args = ["options.py", "192.168.1.2", "-p", "80,443"]
+def test_parse_args_default():
+    """_summary_
+    default option test
+    """
+    # 必須引数のみ指定
+    test_args = [
+        "options.py",
+        "192.168.1.2",
+    ]
+    sys.argv = test_args
+    args = options.parse_args()
+    assert args["target_ip"] == "192.168.1.2"
+    assert args["port"] == [22, 80, 443]
+    assert args["scan_type"] == "connect"
+    assert args["max_rtt_timeout"] == 1000
+
+
+def test_parse_args_options():
+    """_summary_
+    custom option test
+    """
+    test_args = [
+        "options.py",
+        "192.168.1.2",
+        "-p",
+        "80,443",
+        "--max-rtt-timeout",
+        "1000",
+        "-sS",
+    ]
     sys.argv = test_args
     args = options.parse_args()
     assert args["target_ip"] == "192.168.1.2"
     assert args["port"] == [80, 443]
+    assert args["scan_type"] == "stealth"
+    assert args["max_rtt_timeout"] == 1000
 
 
 def test_parse_args_port_range():
@@ -55,6 +85,15 @@ def test_create_port_list_start_larger_than_end():
         options._create_port_list(port)
     except ValueError as e:
         assert str(e) == "[-p] port range start is larger than end"
+
+
+def test_create_port_list_all_port():
+    """
+    -p 32-22のようなポートレンジ指定機能のテスト
+    """
+    port = "-"
+    port_list = options._create_port_list(port)
+    assert port_list == list(range(0, 65536))
 
 
 if __name__ == "__main__":

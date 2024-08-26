@@ -13,7 +13,7 @@ def parse_args() -> dict:
         dict:
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("target_ip", help="set target ip address.", type=str)
+    parser.add_argument("target_ip", help="set target ip address. or FQDN", type=str)
     parser.add_argument(
         "-sT",
         "--connect_scan",
@@ -29,11 +29,19 @@ def parse_args() -> dict:
     parser.add_argument(
         "-p",
         "--port",
-        help="port number lists. port number range e.g: -p 22,80,443 -p 22-30",
+        default="22,80,443",
+        help="port number lists. port number range e.g: -p 22,80,443 -p 22-30 -p- (all port)",
         type=str,
     )
-    parser.add_argument("--max-rtt-timeout", help="set max rtt timeout (ms).", type=int)
-    parser.add_argument("--version", action="version", version=__version__)
+    parser.add_argument(
+        "--max-rtt-timeout", default=1000, help="set max rtt timeout (ms).", type=int
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        help="display my_portscanner version",
+        version=__version__,
+    )
     p = parser.parse_args()
 
     try:
@@ -47,16 +55,11 @@ def parse_args() -> dict:
     else:
         scan_type = "connect"
 
-    if p.max_rtt_timeout is None:
-        max_rtt_timeout = 1000  # ms
-    else:
-        max_rtt_timeout = p.max_rtt_timeout
-
     args = {
         "target_ip": p.target_ip,
         "port": port_list,
         "scan_type": scan_type,
-        "max_rtt_timeout": max_rtt_timeout,
+        "max_rtt_timeout": p.max_rtt_timeout,
     }
     return args
 
@@ -70,14 +73,13 @@ def _create_port_list(port: Union[str, None]) -> list[int]:
         port None: no -p option
 
     Returns:
-        list[int]: e.g: [22, 80, 443]
+        list[int]: port_list
     """
-    default_port_list = [22, 80, 443]
-
-    if port is None:
-        return default_port_list
     if port.isdigit():
         return [int(port)]
+    # all port
+    if port == "-":
+        return list(range(0, 65536))
 
     # ,区切りをリストに変換
     if "," in port:
