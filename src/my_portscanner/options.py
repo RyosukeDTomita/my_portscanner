@@ -13,12 +13,12 @@ def parse_args() -> dict:
         dict:
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("target_ip", help="set target ip address. or FQDN", type=str)
+    parser.add_argument("target_ip", help="set target IP address or FQDN.", type=str)
     parser.add_argument(
         "-sT",
         "--connect_scan",
         action="store_true",
-        help="TCP connect scan",
+        help="TCP connect scan (default)",
     )
     parser.add_argument(
         "-sS",
@@ -30,16 +30,19 @@ def parse_args() -> dict:
         "-p",
         "--port",
         default="22,80,443",
-        help="port number lists. port number range e.g: -p 22,80,443 -p 22-30 -p- (all port)",
+        help="port number, port number lists, port number range. e.g: -p 22 -p 22,80,443 -p 22-30 -p- (all port)",
         type=str,
     )
     parser.add_argument(
-        "--max-rtt-timeout", default=1000, help="set max rtt timeout (ms).", type=int
+        "--max-rtt-timeout",
+        default=1000,
+        help="set max rtt timeout (ms). default=1000",
+        type=int,
     )
     parser.add_argument(
         "--version",
         action="version",
-        help="display my_portscanner version",
+        help="display my_portscanner version and exit",
         version=__version__,
     )
     p = parser.parse_args()

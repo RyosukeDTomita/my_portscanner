@@ -22,32 +22,37 @@ Full scratch built [nmap](https://nmap.org/) respect port scanner.
 - EXAMPLE
 
 ```shell
-docker run my_portscanner 192.168.150.35 -p 22,80,443,3306,5432
-Starting my_portscanner 0.1.0 ( https://github.com/RyosukeDTomita/my_portscanner ) at 2024-08-18 20:06 JST
-my_portscanner scan report for 192.168.150.35 (192.168.150.35)
-connect scan
-PORT       STATE SERVICE
-22/tcp     open  unknown
+docker run my_portscanner -sS -p 22,80,443,8080 192.168.150.58 --max-rtt-timeout 200
+Starting my_portscanner 0.1.3 ( https://github.com/RyosukeDTomita/my_portscanner ) at 2024-08-26 11:40 JST
+my_portscanner scan report for 192.168.150.58 (192.168.150.58)
+stealth scan
+PORT       STATE    SERVICE
+22/tcp     filtered unknown
+80/tcp     closed   unknown
+443/tcp    closed   unknown
+8080/tcp   closed   unknown
 ```
 
 - HELP
 
 ```shell
 docker run my_portscanner -h
-usage: my_portscanner [-h] [-sT] [-sS] [-oN FILE_TXT] [-p PORT] [--version]
+usage: my_portscanner [-h] [-sT] [-sS] [-p PORT]
+                      [--max-rtt-timeout MAX_RTT_TIMEOUT] [--version]
                       target_ip
 
 positional arguments:
-  target_ip             set target ip address.
+  target_ip             set target IP address or FQDN.
 
 options:
   -h, --help            show this help message and exit
-  -sT, --connect_scan   TCP connect scan
+  -sT, --connect_scan   TCP connect scan (default)
   -sS, --stealth_scan   TCP SYN scan
-  -oN FILE_TXT, --file_txt FILE_TXT
-                        output txt file name.
-  -p PORT, --port PORT  port number lists
-  --version             show program's version number and exit
+  -p PORT, --port PORT  port number, port number lists, port number range.
+                        e.g: -p 22 -p 22,80,443 -p 22-30 -p- (all port)
+  --max-rtt-timeout MAX_RTT_TIMEOUT
+                        set max rtt timeout (ms). default=1000
+  --version             display my_portscanner version and exit
 ```
 
 ---
