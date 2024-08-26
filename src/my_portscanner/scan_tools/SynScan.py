@@ -10,63 +10,78 @@ from .Scan import Scan
 class SynScan(Scan):
     def run(self) -> list[dict]:
         """
-        run SYN scan
-
+        Run SYN scan
         Returns:
             scan_result: list[dict]
-            e.g: [{"port": port, "state": "open"}, "port": port, "state": "closed"} ...]
+            e.g: [{"port": port, "state": "open"}, {"port": port, "state": "closed"}, ...]
         """
-        self.scan_result = asyncio.run(self._async_run())
-        return self.scan_result
-
-    async def _async_run(self):
-        scan_result = []
-        for i in range(self.target_port_list[0], self.target_port_list[-1], 4):
-            results = await asyncio.gather(
-                self._create_task(self.target_port_list[i]),
-                self._create_task(self.target_port_list[i + 1]),
-                self._create_task(self.target_port_list[i + 2]),
-                self._create_task(self.target_port_list[i + 3]),
-            )
-            for result in results:
-                scan_result.append(result)
-        return scan_result
-
-    async def _create_task(self, port: int):
-        loop = asyncio.get_event_loop()
-        scan_result = await loop.run_in_executor(None, self._port_scan, port)
-        return scan_result
-
-    def _port_scan(self, port: int) -> list[dict]:
-        """
-        run SYN scan with asyncio
-
-        Returns:
-            scan_result: list[dict]
-            e.g: [{"port": port, "state": "open"}, "port": port, "state": "closed"} ...]
-        """
-        conf.verb = 0  # packet送信時のログをSTDOUTに表示しない
-        syn_packet = IP(dst=self.target_ip) / TCP(dport=port, flags="S")
         try:
-            response_packet = sr1(syn_packet, timeout=self.max_rtt_timeout / 1000)
+            self.scan_result = asyncio.run(self._async_run())
         except PermissionError:
             print(
                 "You requested a scan type which requires root privileges.\nQUITTING!"
             )
             sys.exit(1)
+        return self.scan_result
 
-        # FWなどによってパケットがフィルタリングされた場合にはレスポンスなし
+    async def _async_run(self) -> list[dict]:
+        """_summary_
+        NOTE: 非同期処理を扱う関数を仕様するために，自身を非同期関数に変更して切り出している。
+        # NOTE: `await asyncio.gather()`の戻り値の型は'_GatheringFuture'なので，list()でリストに変換している。
+        Returns:
+            scan_result: list[dict]
+            e.g: [{"port": port, "state": "open"}, {"port": port, "state": "closed"}, ...]
+        """
+        semaphore = asyncio.Semaphore(
+            16
+        )  # 同時実行数を16に制限 FIXME: ユーザが指定できるようにする。
+        tasks = [self._create_task(port, semaphore) for port in self.target_port_list]
+        return list(await asyncio.gather(*tasks))
+
+    async def _create_task(self, port: int, semaphore: asyncio.Semaphore) -> dict:
+        """_summary_
+        _port_scanを非同期処理にするためのラッパー関数
+        Args:
+            port int: port_number
+            semaphore
+        Returns:
+            dict: {"port": port, "state": state}
+        """
+        async with semaphore:
+            # NOTE: asyncio.run_in_executorの代わりにasyncio.to_threadが推奨なので変更した。
+            return await asyncio.to_thread(self._port_scan, port)
+
+    def _port_scan(self, port: int) -> dict:
+        """
+        Run SYN scan for a single port
+        非同期処理で実行される関数
+        Args:
+            port int: port_number
+        Returns:
+            dict: {"port": port, "state": state}
+        """
+        conf.verb = 0  # packet送信時のログをSTDOUTに表示しない
+        syn_packet = IP(dst=self.target_ip) / TCP(dport=port, flags="S")
+
+        try:
+            # SYNパケットの作成する。パケットの生成には管理者権限が必要
+            response_packet = sr1(syn_packet, timeout=self.max_rtt_timeout / 1000)
+        except PermissionError:
+            raise PermissionError
+
+        # timeoutしてレスポンスなしの場合にはFW等によってパケットがフィルタリングされたと判断し，filterdにする。
         if response_packet is None:
             return {"port": port, "state": "filtered"}
 
+        # TCPパケットでない場合には，Noneを返す。基本的には無い想定。
         try:
             response_packet.haslayer(TCP)
         except AttributeError:
-            # SYN/ACKパケットが返ってきた際にopen portとしてリストに追加
-            pass
+            return
+
         if response_packet[TCP].flags == "SA":
             return {"port": port, "state": "open"}
-        # closed portの場合はRSTパケットが返ってくる
+        # RSTパケットが変えてきたときにはclosedとする
         elif response_packet[TCP].flags == "RA":
             return {"port": port, "state": "closed"}
         else:
