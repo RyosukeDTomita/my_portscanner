@@ -18,11 +18,12 @@ class TestConnectScan(unittest.TestCase):
         self.expected_closed_ports = [8080]
         self.expected_filterd_ports = [22]
         self.max_rtt_timeout = 100
+        self.max_parallelism = 16
 
     @patch("my_portscanner.scan_tools.ConnectScan.socket.socket")
     def test_port_scan(self, mock_socket):
         def connext_ex_side_effect(target_tuple):
-            ip, port = target_tuple[0], target_tuple[1]
+            _, port = target_tuple[0], target_tuple[1]
             if port in self.expected_open_ports:
                 return 0
             elif port in self.expected_closed_ports:
@@ -37,6 +38,7 @@ class TestConnectScan(unittest.TestCase):
             target_ip=self.target_ip,
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
+            max_parallelism=self.max_parallelism,
         )
         scan_result = []
         for port in self.target_port_list:
@@ -59,6 +61,7 @@ class TestConnectScan(unittest.TestCase):
             target_ip=self.target_ip,
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
+            max_parallelism=self.max_parallelism,
         )
         scan.scan_result = [
             {"port": 22, "state": "filtered"},
@@ -95,6 +98,7 @@ class TestConnectScan(unittest.TestCase):
             target_ip=self.target_ip,
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
+            max_parallelism=self.max_parallelism,
         )
 
         # 100行以上のテストデータを作成

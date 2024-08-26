@@ -22,10 +22,18 @@ Full scratch built [nmap](https://nmap.org/) respect port scanner.
 - EXAMPLE
 
 ```shell
+# Connect Scan
+docker run my_portscanner -p 23-445 192.168.150.58 --max-rtt-timeout 200
+Starting my_portscanner 0.1.3 ( https://github.com/RyosukeDTomita/my_portscanner ) at 2024-08-26 11:40 JST
+my_portscanner scan report for 192.168.150.58 (192.168.150.58)
+PORT       STATE    SERVICE
+80/tcp     closed   unknown
+443/tcp    closed   unknown
+
+# SYN Scan
 docker run my_portscanner -sS -p 22,80,443,8080 192.168.150.58 --max-rtt-timeout 200
 Starting my_portscanner 0.1.3 ( https://github.com/RyosukeDTomita/my_portscanner ) at 2024-08-26 11:40 JST
 my_portscanner scan report for 192.168.150.58 (192.168.150.58)
-stealth scan
 PORT       STATE    SERVICE
 22/tcp     filtered unknown
 80/tcp     closed   unknown
@@ -39,6 +47,7 @@ PORT       STATE    SERVICE
 docker run my_portscanner -h
 usage: my_portscanner [-h] [-sT] [-sS] [-p PORT]
                       [--max-rtt-timeout MAX_RTT_TIMEOUT] [--version]
+                      [--max-parallelism MAX_PARALLELISM] [-d]
                       target_ip
 
 positional arguments:
@@ -53,6 +62,9 @@ options:
   --max-rtt-timeout MAX_RTT_TIMEOUT
                         set max rtt timeout (ms). default=1000
   --version             display my_portscanner version and exit
+  --max-parallelism MAX_PARALLELISM
+                        set max parallelism
+  -d, --debug           display debug info
 ```
 
 ---
