@@ -1,5 +1,6 @@
 # cofing:utf-8
 import sys
+import unittest
 from my_portscanner import options
 
 
@@ -18,6 +19,8 @@ def test_parse_args_default():
     assert args["port"] == [22, 80, 443]
     assert args["scan_type"] == "connect"
     assert args["max_rtt_timeout"] == 1000
+    assert args["max_parallelism"] is None
+    assert args["debug"] is False
 
 
 def test_parse_args_options():
@@ -32,6 +35,9 @@ def test_parse_args_options():
         "--max-rtt-timeout",
         "1000",
         "-sS",
+        "--max-parallelism",
+        "32",
+        "-d",
     ]
     sys.argv = test_args
     args = options.parse_args()
@@ -39,6 +45,8 @@ def test_parse_args_options():
     assert args["port"] == [80, 443]
     assert args["scan_type"] == "stealth"
     assert args["max_rtt_timeout"] == 1000
+    assert args["max_parallelism"] == 32
+    assert args["debug"] is True
 
 
 def test_parse_args_port_range():
@@ -97,5 +105,4 @@ def test_create_port_list_all_port():
 
 
 if __name__ == "__main__":
-    test_parse_args()
-    test_parse_args_port_range()
+    unittest.main()
