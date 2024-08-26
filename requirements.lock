@@ -24,6 +24,9 @@ pluggy==1.5.0
     # via pytest
 pytest==8.3.2
     # via my-portscanner
+    # via pytest-asyncio
+pytest-asyncio==0.24.0
+    # via my-portscanner
 python-dateutil==2.9.0.post0
     # via freezegun
 pytz==2024.1
