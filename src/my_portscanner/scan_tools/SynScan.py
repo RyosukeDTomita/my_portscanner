@@ -11,6 +11,7 @@ class SynScan(Scan):
     def run(self) -> list[dict]:
         """
         Run SYN scan
+        run()がsuper class Scanから継承した_async_run()を呼び出し，_create_task()で_port_scan()を非同期処理する。
         Returns:
             scan_result: list[dict]
             e.g: [{"port": port, "state": "open"}, {"port": port, "state": "closed"}, ...]

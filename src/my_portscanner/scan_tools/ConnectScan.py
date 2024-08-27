@@ -10,6 +10,7 @@ class ConnectScan(Scan):
     def run(self) -> list[dict]:
         """_summary_
         run connect scan
+        run()がsuper class Scanの_async_run()を呼び出し，_create_task()で_port_scan()を非同期処理する。
 
         NOTE: https://docs.python.org/ja/3/library/socket.html#socket.socket.connect_ex によるとconnece_exは例外を送出せずにエラーコードを戻り値として返すため，例外処理をしない。
         Returns:
