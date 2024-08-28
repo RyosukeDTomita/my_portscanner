@@ -13,7 +13,7 @@ env:
   PYTHON_VERSION: 3.12.4
 
 jobs:
-  run-pytest:
+  run-integration-test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -28,5 +28,7 @@ jobs:
       - name: integration test
         run: |
           docker compose up hacking_lab_app &
-          docker compose run my_portscanner_app -sS 172.18.0.3
+          docker compose run my_portscanner_app -sS 172.18.0.3 -p 22 -d
+          docker compose run my_portscanner_app -sS 172.18.0.3 -p 22,80 --max-parallelism 16 --max-rtt-timeout 200 -d
+          docker compose run my_portscanner_app -sT 172.18.0.3 -p20-30 --max-rtt-timeout 100 -d
 
