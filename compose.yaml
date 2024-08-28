@@ -9,6 +9,7 @@ services:
       my_portscanner_default:
         ipv4_address: 172.18.0.2
 
+  # test用のリソース
   hacking_lab_app:
     build:
       context: ./hacking_lab
@@ -22,6 +23,7 @@ services:
       my_portscanner_default:
         ipv4_address: 172.18.0.3
 
+# test用のリソースとmy_portscan imageを通信するためのdocker network
 networks:
   my_portscanner_default:
     driver: bridge

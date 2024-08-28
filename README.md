@@ -2,6 +2,7 @@
 
 ![un license](https://img.shields.io/github/license/RyosukeDTomita/my_portscanner)
 [![pytest](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/pytest.yaml/badge.svg)](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/pytest.yaml)
+[![integration-test](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/integration-test.yaml/badge.svg)](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/integration-test.yaml)
 [![latest release](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/release.yaml/badge.svg)](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/release.yaml)
 [![GitHub Container Registry](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/packages.yaml/badge.svg)](https://github.com/RyosukeDTomita/my_portscanner/actions/workflows/packages.yaml)
 
@@ -133,6 +134,17 @@ docker run -it my_portscanner <FQDN or IP>
 my_portscanner <FQDN or IP>
 sudo my_portscanner <FQDN or IP > -sS
 ```
+
+### local integration test
+
+```shell
+docker buildx bake
+docker compose up hacking_lab_app &
+docker compose run my_portscanner_app -sS -p 22,80,443,8080 172.18.0.3
+```
+
+> [!CAUTION]
+> test is running with docker network ip and the docker network is created in `compose.yaml`, so it must be run by `docker compose`.
 
 ---
 
