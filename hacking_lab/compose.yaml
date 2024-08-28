@@ -1,0 +1,10 @@
+services:
+  hacking_lab_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hacking_lab:latest
+    container_name: hacking_lab_container
+    ports:
+      - 81:80
+      - 20022:22

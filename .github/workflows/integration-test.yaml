@@ -1,0 +1,32 @@
+name: integration-test
+on:
+  push:
+    paths:
+      - .github/workflows/integration-test.yaml
+      - src/**/*.py
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: 3.12.4
+
+jobs:
+  run-pytest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # checkout repository to runner
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: build image
+        run: |
+          docker buildx bake
+      - name: integration test
+        run: |
+          docker compose up hacking_lab_app &
+          docker compose run my_portscanner_app -sS 172.18.0.3
+

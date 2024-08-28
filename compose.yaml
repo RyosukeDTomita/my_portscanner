@@ -5,3 +5,27 @@ services:
       dockerfile: Dockerfile
     image: my_portscanner:latest
     container_name: my_portscanner-container
+    networks:
+      my_portscanner_default:
+        ipv4_address: 172.18.0.2
+
+  hacking_lab_app:
+    build:
+      context: ./hacking_lab
+      dockerfile: Dockerfile
+    image: hacking_lab:latest
+    container_name: hacking_lab_container
+    ports:
+      - 81:80
+      - 20022:22
+    networks:
+      my_portscanner_default:
+        ipv4_address: 172.18.0.3
+
+networks:
+  my_portscanner_default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/16
