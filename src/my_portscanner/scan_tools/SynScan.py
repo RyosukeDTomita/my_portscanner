@@ -53,7 +53,13 @@ class SynScan(Scan):
         except AttributeError:
             return
 
+        # SYN/ACKパケットが返ってきた場合には，openとする
         if response_packet[TCP].flags == "SA":
+            # RSTパケットを送信することで，コネクションを切断し，ハーフオープン状態を解消する
+            sr1(
+                IP(dst=self.target_ip) / TCP(dport=port, flags="RA"),
+                timeout=self.max_rtt_timeout / 1000,
+            )
             return {"port": port, "state": "open"}
         # RSTパケットが変えてきたときにはclosedとする
         elif response_packet[TCP].flags == "RA":
