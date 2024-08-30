@@ -21,6 +21,7 @@ def test_parse_args_default():
     assert args["max_rtt_timeout"] == 1000
     assert args["max_parallelism"] is None
     assert args["debug"] is False
+    assert args["no_ping"] is False
 
 
 def test_parse_args_options():
@@ -38,6 +39,7 @@ def test_parse_args_options():
         "--max-parallelism",
         "32",
         "-d",
+        "-Pn",
     ]
     sys.argv = test_args
     args = options.parse_args()
@@ -47,6 +49,7 @@ def test_parse_args_options():
     assert args["max_rtt_timeout"] == 1000
     assert args["max_parallelism"] == 32
     assert args["debug"] is True
+    assert args["no_ping"] is True
 
 
 def test_parse_args_port_range():

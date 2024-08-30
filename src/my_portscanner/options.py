@@ -54,6 +54,12 @@ def parse_args() -> dict:
         action="store_true",
         help="display debug info",
     )
+    parser.add_argument(
+        "-Pn",
+        "--no-ping",
+        action="store_true",
+        help="no ping sent before scanning",
+    )
     p = parser.parse_args()
 
     try:
@@ -74,6 +80,7 @@ def parse_args() -> dict:
         "max_rtt_timeout": p.max_rtt_timeout,
         "max_parallelism": p.max_parallelism,
         "debug": p.debug,
+        "no_ping": p.no_ping,
     }
     return args
 

@@ -39,6 +39,7 @@ class TestConnectScan(unittest.TestCase):
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
             max_parallelism=self.max_parallelism,
+            no_ping=False,
         )
         scan_result = []
         for port in self.target_port_list:
@@ -62,6 +63,7 @@ class TestConnectScan(unittest.TestCase):
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
             max_parallelism=self.max_parallelism,
+            no_ping=True,
         )
         scan.scan_result = [
             {"port": 22, "state": "filtered"},
@@ -99,6 +101,7 @@ class TestConnectScan(unittest.TestCase):
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
             max_parallelism=self.max_parallelism,
+            no_ping=True,
         )
 
         # 100行以上のテストデータを作成

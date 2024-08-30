@@ -1,6 +1,8 @@
 # coding: utf-8
 import asyncio
 from abc import ABC, abstractmethod
+import time
+from scapy.all import sr1, IP, ICMP
 
 
 class Scan(ABC):
@@ -11,7 +13,14 @@ class Scan(ABC):
     max_parallelism: int
     scan_result: list[dict]
 
-    def __init__(self, target_ip: str, target_port_list: list[int], max_rtt_timeout: int, max_parallelism: int):
+    def __init__(
+        self,
+        target_ip: str,
+        target_port_list: list[int],
+        max_rtt_timeout: int,
+        max_parallelism: int,
+        no_ping: bool,
+    ):
         """_summary_
         constructor
         Args:
@@ -24,6 +33,7 @@ class Scan(ABC):
         self.target_port_list = target_port_list
         self.max_rtt_timeout = max_rtt_timeout
         self.max_parallelism = max_parallelism
+        self.no_ping = no_ping
         self.scan_result = []
 
     def __str__(self) -> str:
@@ -34,7 +44,20 @@ class Scan(ABC):
             target_port_list_fmt = "all"
         else:
             target_port_list_fmt = self.target_port_list
-        return f"Scan(target_ip={self.target_ip}, target_port_list={target_port_list_fmt}, scan_type={self.__class__.__name__}, max_rtt_timeout={self.max_rtt_timeout}, max_parallelism={self.max_parallelism})"
+        return f"Scan(target_ip={self.target_ip}, target_port_list={target_port_list_fmt}, scan_type={self.__class__.__name__}, max_rtt_timeout={self.max_rtt_timeout}, max_parallelism={self.max_parallelism}, Pn={self.no_ping})"
+
+    def _get_latency(self) -> None:
+        """_summary_
+        latency情報を取得するためICMPパケットを送信する
+        """
+        packet = IP(dst=self.target_ip) / ICMP()
+        start_time = time.time()
+        response = sr1(packet, timeout=self.max_rtt_timeout, verbose=0)
+        if response:
+            latency = time.time() - start_time
+            print(f"Host is up ({latency}s latency).")
+        else:
+            print("Host may be down.")
 
     @abstractmethod
     def run(self) -> list[dict]:
@@ -95,7 +118,9 @@ class Scan(ABC):
         # 出力が100行を超えそうなときは，closed portsを非表示にする。
         if len(self.scan_result) > 100:
             self.scan_result = [
-                port_info for port_info in self.scan_result if port_info["state"] != "closed"
+                port_info
+                for port_info in self.scan_result
+                if port_info["state"] != "closed"
             ]
         # port6桁+/tcpで10桁
         print(f"{"PORT":<10} {"STATE":<8} SERVICE")

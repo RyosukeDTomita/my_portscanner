@@ -14,6 +14,8 @@ class ConnectScan(Scan):
             scan_result: list[dict]
             e.g: [{"port": port, "state": "open"}, "port": port, "state": "closed"} ...]
         """
+        if not self.no_ping:
+            self._get_latency()
         self.scan_result = asyncio.run(self._async_run())
         return self.scan_result
 
