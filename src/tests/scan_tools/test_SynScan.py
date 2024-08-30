@@ -47,6 +47,7 @@ class TestSynScan(unittest.TestCase):
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
             max_parallelism=self.max_parallelism,
+            no_ping=True,
         )
 
         mock_sr1.side_effect = self.sr1_side_effect
@@ -85,6 +86,7 @@ class TestSynScan(unittest.TestCase):
             target_port_list=self.target_port_list,
             max_rtt_timeout=self.max_rtt_timeout,
             max_parallelism=self.max_parallelism,
+            no_ping=True,
         )
 
         # NOTE: mock_getuid.return_valueによってuid=0以外にmockしてもうまくPermissionErrorを発生させることができなかったので直接PermissionErrorを発生させる

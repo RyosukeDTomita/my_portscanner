@@ -13,6 +13,8 @@ class SynScan(Scan):
             scan_result: list[dict]
             e.g: [{"port": port, "state": "open"}, {"port": port, "state": "closed"}, ...]
         """
+        if not self.no_ping:
+            self._get_latency()
         try:
             self.scan_result = asyncio.run(self._async_run())
         # NOTE: 非同期処理により複数回PermissoinErrorが上がらないようにするため，例外の伝播を行っている。

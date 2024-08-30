@@ -30,5 +30,7 @@ jobs:
           docker compose up hacking_lab_app &
           docker compose run my_portscanner_app -sS 172.18.0.3 -p 22 -d
           docker compose run my_portscanner_app -sS 172.18.0.3 -p 22,80 --max-parallelism 16 --max-rtt-timeout 200 -d
+          docker compose run my_portscanner_app -sS 172.18.0.3 -p20-30 --max-rtt-timeout 100 -d -Pn
           docker compose run my_portscanner_app -sT 172.18.0.3 -p20-30 --max-rtt-timeout 100 -d
+          docker compose run my_portscanner_app -sT 172.18.0.3 -p20-30 --max-rtt-timeout 100 -d -Pn
 

@@ -40,6 +40,7 @@ def main():
             target_port_list=args["port"],
             max_rtt_timeout=args["max_rtt_timeout"],
             max_parallelism=args["max_parallelism"],
+            no_ping=args["no_ping"],
         )
     elif args["scan_type"] == "stealth":
         scan = SynScan(
@@ -47,6 +48,7 @@ def main():
             target_port_list=args["port"],
             max_rtt_timeout=args["max_rtt_timeout"],
             max_parallelism=args["max_parallelism"],
+            no_ping=args["no_ping"],
         )
     else:
         print("invalid scan type")
