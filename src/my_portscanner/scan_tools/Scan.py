@@ -1,27 +1,30 @@
 # coding: utf-8
-from dataclasses import dataclass
 import asyncio
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 
-@dataclass
-class Scan:
+class Scan(ABC):
+    # 初期化
     target_ip: str
     target_port_list: list[int]
     max_rtt_timeout: int
     max_parallelism: int
+    scan_result: list[dict]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, target_ip: str, target_port_list: list[int], max_rtt_timeout: int, max_parallelism: int):
         """_summary_
-
-        継承専用のクラスのため，直接インスタンス化できないようにする。
-        Raises:
-            TypeError: _description_
+        constructor
+        Args:
+            target_ip str: target ip address
+            port_list list[int]: list of target port numbers
+            max_rtt_timeout int: max rtt timeout
+            max_parallelism int: max parallelism
         """
-        if type(self) is Scan:
-            raise TypeError(
-                "Scan is an abstract class and cannot be instantiated directly"
-            )
+        self.target_ip = target_ip
+        self.target_port_list = target_port_list
+        self.max_rtt_timeout = max_rtt_timeout
+        self.max_parallelism = max_parallelism
+        self.scan_result = []
 
     def __str__(self) -> str:
         """_summary_

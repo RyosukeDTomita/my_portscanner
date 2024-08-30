@@ -1,11 +1,9 @@
 # coding: utf-8
 import socket
 import asyncio
-from dataclasses import dataclass
 from .Scan import Scan
 
 
-@dataclass
 class ConnectScan(Scan):
     def run(self) -> list[dict]:
         """_summary_

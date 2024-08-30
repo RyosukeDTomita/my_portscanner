@@ -1,12 +1,10 @@
 # coding: utf-8
 from scapy.all import IP, TCP, sr1, conf
-from dataclasses import dataclass
 import asyncio
 import sys
 from .Scan import Scan
 
 
-@dataclass
 class SynScan(Scan):
     def run(self) -> list[dict]:
         """
