@@ -52,7 +52,7 @@ class Scan(ABC):
         """
         packet = IP(dst=self.target_ip) / ICMP()
         start_time = time.time()
-        response = sr1(packet, timeout=self.max_rtt_timeout, verbose=0)
+        response = sr1(packet, timeout=self.max_rtt_timeout / 1000, verbose=0)
         if response:
             latency = time.time() - start_time
             print(f"Host is up ({latency}s latency).")
