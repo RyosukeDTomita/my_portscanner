@@ -122,11 +122,16 @@ class Scan(ABC):
                 for port_info in self.scan_result
                 if port_info["state"] != "closed"
             ]
+        if self.__class__.__name__ == "UdpScan":
+            trans_port_protocol = "udp"
+        else:
+            trans_port_protocol = "tcp"
         # port6桁+/tcpで10桁
-        print(f"{"PORT":<10} {"STATE":<8} SERVICE")
+        # print(f"{"PORT":<10} {"STATE":<8} SERVICE") FIXME: 文字列の最大値を使うように変更
+        print(f"{"PORT":<10} {"STATE":<13} SERVICE")
         for port_info in self.scan_result:
             print(
-                f"{port_info["port"]}/tcp".ljust(10)
+                f"{port_info["port"]}/{trans_port_protocol}".ljust(10)
                 + " "
-                + f"{port_info["state"]:<8} unknown"
+                + f"{port_info["state"]:<13} unknown"
             )

@@ -83,11 +83,11 @@ class TestConnectScan(unittest.TestCase):
         output = captured_output.getvalue().strip()
 
         expected_output = (
-            f"{'PORT':<10} {'STATE':<8} SERVICE\n"
-            f"{'22/tcp':<10}" + " " + f"{'filtered':<8} unknown\n"
-            f"{'80/tcp':<10}" + " " + f"{'open':<8} unknown\n"
-            f"{'443/tcp':<10}" + " " + f"{'open':<8} unknown\n"
-            f"{'8080/tcp':<10}" + " " + f"{'closed':<8} unknown"
+            f"{'PORT':<10} {'STATE':<13} SERVICE\n"
+            f"{'22/tcp':<10}" + " " + f"{'filtered':<13} unknown\n"
+            f"{'80/tcp':<10}" + " " + f"{'open':<13} unknown\n"
+            f"{'443/tcp':<10}" + " " + f"{'open':<13} unknown\n"
+            f"{'8080/tcp':<10}" + " " + f"{'closed':<13} unknown"
         )
 
         self.assertEqual(output, expected_output)
@@ -118,7 +118,7 @@ class TestConnectScan(unittest.TestCase):
         output = captured_output.getvalue().strip()
 
         # 何も表示されないことを確認
-        expected_output = f"{'PORT':<10} {'STATE':<8} SERVICE"
+        expected_output = f"{'PORT':<10} {'STATE':<13} SERVICE"
         self.assertEqual(output, expected_output)
 
 

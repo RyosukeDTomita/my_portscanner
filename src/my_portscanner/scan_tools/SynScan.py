@@ -6,6 +6,7 @@ from .Scan import Scan
 
 
 class SynScan(Scan):
+
     def run(self) -> list[dict]:
         """
         Run SYN scan

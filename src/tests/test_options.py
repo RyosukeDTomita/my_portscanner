@@ -62,7 +62,7 @@ def test_parse_args_port_range():
     assert args["port"] == [22, 23, 24, 25, 26, 27, 28, 29, 30]
 
 
-def test_create_port_list_non_digit_list():
+def test_create_port_list_non_digit_lest():
     """
     -p hoge,32のようなポートレンジ指定機能のテスト
     """
@@ -100,11 +100,43 @@ def test_create_port_list_start_larger_than_end():
 
 def test_create_port_list_all_port():
     """
-    -p 32-22のようなポートレンジ指定機能のテスト
+    -p- オールポートレンジ指定機能のテスト
+    tcpは0~65535, udpは1~1023
     """
     port = "-"
+    assert list(range(0, 65536)) == options._create_port_list(port)
+    assert list(range(1, 1024)) == options._create_port_list(port, is_udp=True)
+
+
+def test_create_port_list_single_port():
+    """
+    -p 22のようなポートレンジ指定機能のテスト
+    """
+    port = "22"
     port_list = options._create_port_list(port)
-    assert port_list == list(range(0, 65536))
+    assert port_list == [22]
+
+
+def test_select_scan_type_connect():
+    """
+    _select_scan_type()のテスト
+    """
+    # default
+    assert "connect" == options._select_scan_type(False, False, False)
+
+    assert "connect" == options._select_scan_type(True, False, False)
+    assert "stealth" == options._select_scan_type(False, True, False)
+    assert "udp" == options._select_scan_type(False, False, True)
+
+
+def test_select_scan_type_error():
+    """
+    _select_scan_type()で複数のスキャン方法が指定されている場合にValueErrorが発生することを確認
+    """
+    try:
+        options._select_scan_type(True, True, False)
+    except ValueError as e:
+        assert str(e) == "[-sT] [-sS] [-sU] options are exclusive."
 
 
 if __name__ == "__main__":

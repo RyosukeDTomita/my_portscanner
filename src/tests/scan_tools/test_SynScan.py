@@ -8,6 +8,10 @@ from my_portscanner.scan_tools.SynScan import SynScan
 
 
 class TestSynScan(unittest.TestCase):
+    """
+    NOTE: print_result()関連のtestはConnectScan.pyと同じため省略
+    """
+
     def setUp(self):
         """
         テスト実行時に毎回実行され，
