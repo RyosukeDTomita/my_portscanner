@@ -6,6 +6,7 @@ from .options import parse_args
 from .get_datetime import get_datetime_now
 from .scan_tools import ConnectScan
 from .scan_tools import SynScan
+from .scan_tools import UdpScan
 from .version import __version__
 
 
@@ -44,6 +45,14 @@ def main():
         )
     elif args["scan_type"] == "stealth":
         scan = SynScan(
+            target_ip=target_ip,
+            target_port_list=args["port"],
+            max_rtt_timeout=args["max_rtt_timeout"],
+            max_parallelism=args["max_parallelism"],
+            no_ping=args["no_ping"],
+        )
+    elif args["scan_type"] == "udp":
+        scan = UdpScan(
             target_ip=target_ip,
             target_port_list=args["port"],
             max_rtt_timeout=args["max_rtt_timeout"],

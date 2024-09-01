@@ -27,6 +27,12 @@ def parse_args() -> dict:
         help="TCP SYN scan",
     )
     parser.add_argument(
+        "-sU",
+        "--udp_scan",
+        action="store_true",
+        help="UDP scan",
+    )
+    parser.add_argument(
         "-p",
         "--port",
         default="22,80,443",
@@ -63,15 +69,19 @@ def parse_args() -> dict:
     p = parser.parse_args()
 
     try:
-        port_list = _create_port_list(p.port)
+        scan_type = _select_scan_type(p.connect_scan, p.stealth_scan, p.udp_scan)
     except ValueError as e:
         print(e)
         sys.exit(1)
 
-    if p.stealth_scan:
-        scan_type = "stealth"
-    else:
-        scan_type = "connect"
+    try:
+        if scan_type == "udp":
+            port_list = _create_port_list(p.port, is_udp=True)
+        else:
+            port_list = _create_port_list(p.port)
+    except ValueError as e:
+        print(e)
+        sys.exit(1)
 
     args = {
         "target_ip": p.target_ip,
@@ -85,7 +95,7 @@ def parse_args() -> dict:
     return args
 
 
-def _create_port_list(port: Union[str, None]) -> list[int]:
+def _create_port_list(port: Union[str, None], is_udp=False) -> list[int]:
     """_create_port_list.
     -p オプションの引数をリストに変換する
 
@@ -100,6 +110,8 @@ def _create_port_list(port: Union[str, None]) -> list[int]:
         return [int(port)]
     # all port
     if port == "-":
+        if is_udp:
+            return list(range(1, 1024))
         return list(range(0, 65536))
 
     # ,区切りをリストに変換
@@ -116,3 +128,31 @@ def _create_port_list(port: Union[str, None]) -> list[int]:
             raise ValueError("[-p] port range start is larger than end")
         port_list = [int(x) for x in range(int(port_start_str), int(port_end_str) + 1)]
     return port_list
+
+
+def _select_scan_type(connect_scan: bool, stealth_scan: bool, udp_scan: bool) -> str:
+    """_summary_
+    複数のオプションが同時に指定されないようにしつつ，適切なスキャンタイプを返す
+    Args:
+        connect_scan: bool
+        stealth_scan: bool
+        udp_scan: bool
+
+    Returns:
+        str: scan_type
+    """
+    # 複数のオプションが指定されていたらエラー
+    options_count = sum([connect_scan, stealth_scan, udp_scan])
+    if options_count > 1:
+        raise ValueError("[-sT] [-sS] [-sU] options are exclusive.")
+
+    # default options
+    if options_count == 0:
+        return "connect"
+
+    if stealth_scan:
+        return "stealth"
+    elif udp_scan:
+        return "udp"
+    else:
+        return "connect"
