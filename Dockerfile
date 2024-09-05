@@ -1,5 +1,4 @@
 # Dev Container
-#FROM python:3.12.4-bullseye AS devcontainer
 FROM debian:bookworm-20240812 AS devcontainer
 
 ARG PYTHON_VERSION=3.12.4
@@ -9,6 +8,7 @@ COPY ../ .
 
 # aqua install
 RUN <<EOF
+set -ex
 apt-get update -y
 apt-get install -y --no-install-recommends wget ca-certificates
 wget -q https://github.com/aquaproj/aqua/releases/download/v2.30.0/aqua_linux_amd64.tar.gz
@@ -20,11 +20,13 @@ EOF
 # install packages and some tools.
 # NOTE: rye is installed by aqua.
 RUN <<EOF
+set -ex
 aqua install
 EOF
 
 # build
 RUN <<EOF
+set -ex
 PATH=$PATH":$(aqua root-dir)/bin"
 rye pin ${PYTHON_VERSION}
 rye sync
@@ -46,6 +48,7 @@ LABEL version="${VERSION}" \
 # create execution user with sudo
 ARG USER_NAME="sigma"
 RUN <<EOF
+set -ex
 apt-get update -y
 apt-get install -y --no-install-recommends sudo
 echo 'Creating ${USER_NAME} group.'
@@ -62,6 +65,7 @@ COPY --from=devcontainer --chown=${USER_NAME}:${USER_NAME} ["/app/dist/my_portsc
 
 # install app
 RUN <<EOF
+set -ex
 python3 -m pip install /app/dist/my_portscanner-${VERSION}-py3-none-any.whl
 EOF
 
