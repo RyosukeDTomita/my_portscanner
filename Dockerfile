@@ -7,8 +7,7 @@ WORKDIR /app
 COPY ../ .
 
 # aqua install
-RUN <<EOF
-set -ex
+RUN <<EOF bash -ex
 apt-get update -y
 apt-get install -y --no-install-recommends wget ca-certificates
 wget -q https://github.com/aquaproj/aqua/releases/download/v2.30.0/aqua_linux_amd64.tar.gz
@@ -19,14 +18,10 @@ EOF
 
 # install packages and some tools.
 # NOTE: rye is installed by aqua.
-RUN <<EOF
-set -ex
-aqua install
-EOF
+RUN aqua install
 
 # build
-RUN <<EOF
-set -ex
+RUN <<EOF bash -ex
 PATH=$PATH":$(aqua root-dir)/bin"
 rye pin ${PYTHON_VERSION}
 rye sync
@@ -45,12 +40,16 @@ LABEL version="${VERSION}" \
       docker_compose_run="docker compose run my_portscanner_app localhost" \
       docker_run="docker run my_portscanner localhost"
 
-# create execution user with sudo
-ARG USER_NAME="sigma"
-RUN <<EOF
-set -ex
+# install sudo
+RUN <<EOF bash -ex
 apt-get update -y
 apt-get install -y --no-install-recommends sudo
+EOF
+
+ARG USER_NAME="sigma"
+
+# create execution user with sudo
+RUN <<EOF bash -ex
 echo 'Creating ${USER_NAME} group.'
 addgroup ${USER_NAME}
 echo 'Creating ${USER_NAME} user.'
@@ -64,10 +63,7 @@ EOF
 COPY --from=devcontainer --chown=${USER_NAME}:${USER_NAME} ["/app/dist/my_portscanner-${VERSION}-py3-none-any.whl", "/app/dist/my_portscanner-${VERSION}-py3-none-any.whl"]
 
 # install app
-RUN <<EOF
-set -ex
-python3 -m pip install /app/dist/my_portscanner-${VERSION}-py3-none-any.whl
-EOF
+RUN python3 -m pip install /app/dist/my_portscanner-${VERSION}-py3-none-any.whl
 
 USER ${USER_NAME}
 ENTRYPOINT ["sudo", "my_portscanner"]
