@@ -4,7 +4,7 @@ FROM debian:bookworm-20240812 AS devcontainer
 ARG PYTHON_VERSION=3.12.4
 
 WORKDIR /app
-COPY ../ .
+COPY ./ .
 
 # aqua install
 RUN <<EOF bash -ex
