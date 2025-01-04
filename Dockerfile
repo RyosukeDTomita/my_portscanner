@@ -1,10 +1,9 @@
 # Dev Container
-FROM debian:bookworm-20240812 AS devcontainer
+FROM debian:bookworm-20241223 AS devcontainer
 
 ARG PYTHON_VERSION=3.12.4
 
 WORKDIR /app
-COPY ./ .
 
 # aqua install
 RUN <<EOF bash -ex
@@ -18,9 +17,11 @@ EOF
 
 # install packages and some tools.
 # NOTE: rye is installed by aqua.
+COPY ./aqua.yaml ./
 RUN aqua install
 
 # build
+COPY ./ .
 RUN <<EOF bash -ex
 PATH=$PATH":$(aqua root-dir)/bin"
 rye pin ${PYTHON_VERSION}
