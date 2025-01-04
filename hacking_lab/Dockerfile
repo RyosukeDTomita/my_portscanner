@@ -1,4 +1,4 @@
-FROM debian:bookworm-20240812-slim
+FROM debian:bookworm-20241223-slim
 ARG VERSION="0.0.0"
 LABEL version="${VERSION}" \
       author="RyosukeDTomita" \
